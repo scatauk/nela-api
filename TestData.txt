@@ -1,0 +1,17 @@
+curl -X POST http://localhost:3000/nela-risk \
+-H "Content-Type: application/json" \
+-d '{
+    "age": 65,
+    "heartRate": 85,
+    "systolicBloodPressure": 130,
+    "urea": 7.0,
+    "whiteBloodCellCount": 12.0,
+    "albumin": 30,
+    "asaGrade": 3,
+    "glasgowComaScore": 14,
+    "malignancy": "nodal",
+    "dyspnoea": "3",
+    "urgency": "2-6hrs",
+    "indicationForSurgery": "sepsis",
+    "soiling": true
+}'
