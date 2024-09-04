@@ -77,6 +77,24 @@ function calculateNelaRisk(input) {
     console.log('Indication Component:', indicationComponent);
     console.log('Soiling Component:', soilingComponent);
 
+    // store these logged components in an object
+    const components = {
+        ageComponent,
+        asaComponent,
+        asaAgeInteraction,
+        albuminComponent,
+        pulseComponent,
+        systolicBP_Component,
+        lnUreaComponent,
+        lnWBCComponent,
+        gcsComponent,
+        malignancyComponent,
+        respiratoryComponent,
+        urgencyComponent,
+        indicationComponent,
+        soilingComponent
+    };
+
     // Calculate the logit
     const logit = (
         -3.04678 +
@@ -103,7 +121,9 @@ function calculateNelaRisk(input) {
     console.log('Final Logit:', logit);
     console.log('Predicted Risk:', (predictedRisk*100).toFixed(2));
 
-    return predictedRisk*100;
+    return { predictedRisk: predictedRisk*100,
+        debug: components,
+     };
 }
 
 // Define the API route
@@ -138,14 +158,14 @@ app.post('/nela-risk', (req, res) => {
             soiling
         };
 
-        const predictedRisk = calculateNelaRisk(input).toFixed(2);
-        if (predictedRisk < 0 || predictedRisk > 100) {
+        const { predictedRisk, debug } = calculateNelaRisk(input);
+        if (predictedRisk.toFixed(2) < 0 || predictedRisk.toFixed(2) > 100) {
             throw new Error('Invalid input');
         }
         if (isNaN(predictedRisk)) {
             throw new Error('Invalid input');
         }
-        res.json({ predictedRisk });
+        res.json({ predictedRisk: predictedRisk.toFixed(2), debug });
     } catch (error) {
         console.error('Error calculating NELA risk:', error);
         res.status(400).json({ error: 'Invalid input' });
