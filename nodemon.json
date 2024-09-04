@@ -1,0 +1,4 @@
+{
+  "watch": ["frontend/**", "index.js", "schema.json"],
+  "ext": "js json html"
+}

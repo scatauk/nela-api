@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "age": { "type": "integer", "name": "age in years", "value": 65 },
+    "heartRate": { "type": "integer", "name": "heart rate in bpm", "value": 85 },
+    "systolicBloodPressure": { "type": "integer", "name": "systolic blood pressure in mmHg", "value": 130 },
+    "urea": { "type": "number", "name": "urea in mmol/L", "value": 7.0 },
+    "whiteBloodCellCount": { "type": "number", "name": "white blood cell count in 10^9/L", "value": 12.0 },
+    "albumin": { "type": "integer", "name": "albumin in g/L", "value": 30 },
+    "asaGrade": { "type": "integer", "name": "ASA grade", "value": 3 },
+    "glasgowComaScore": { "type": "integer", "name": "Glasgow Coma Score", "value": 14 },
+    "malignancy": { "type": "string", "name": "malignancy status",  "value": "nodal" },
+    "dyspnoea": { "type": "string", "name": "dyspnoea status", "value": "3" },
+    "urgency": { "type": "string", "name": "urgency of surgery", "value": "2-6hrs" },
+    "indicationForSurgery": { "type": "string", "name": "indication for surgery", "value": "sepsis" },
+    "soiling": { "type": "boolean", "name": "soiling status", "value": true }
+  },
+  "required": [
+    "age",
+    "heartRate",
+    "systolicBloodPressure",
+    "urea",
+    "whiteBloodCellCount",
+    "albumin",
+    "asaGrade",
+    "glasgowComaScore",
+    "malignancy",
+    "dyspnoea",
+    "urgency",
+    "indicationForSurgery",
+    "soiling"
+  ]
+}

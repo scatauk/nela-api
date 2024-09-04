@@ -109,6 +109,7 @@ function calculateNelaRisk(input) {
 // Define the API route
 app.post('/nela-risk', (req, res) => {
     try {
+        console.log('NELA Risk Calculation Request:', req.body);
         const { age, heartRate, systolicBloodPressure, urea, whiteBloodCellCount, 
                 albumin, asaGrade, glasgowComaScore, malignancy, dyspnoea, urgency, 
                 indicationForSurgery, soiling } = req.body;
@@ -138,11 +139,26 @@ app.post('/nela-risk', (req, res) => {
         };
 
         const predictedRisk = calculateNelaRisk(input).toFixed(2);
+        if (predictedRisk < 0 || predictedRisk > 100) {
+            throw new Error('Invalid input');
+        }
+        if (isNaN(predictedRisk)) {
+            throw new Error('Invalid input');
+        }
         res.json({ predictedRisk });
     } catch (error) {
         console.error('Error calculating NELA risk:', error);
         res.status(400).json({ error: 'Invalid input' });
     }
+});
+
+// return html page if called with '/' route
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/frontend/index.html');
+});
+
+app.get("/schema.json", (req, res) => {
+  res.sendFile(__dirname + "/schema.json");
 });
 
 // Start the server
