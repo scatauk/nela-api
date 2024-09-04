@@ -5,7 +5,7 @@ const path = require("path");
 
 app.use(bodyParser.json());
 
-export function calculateNelaRisk(input) {
+function calculateNelaRisk(input) {
   try {
     // Centered variables
     const ageCent = input.age - 64;
@@ -206,3 +206,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+module.exports = { calculateNelaRisk };
