@@ -2,6 +2,18 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
+require("dotenv").config();
+
+console.log('Logging status = ' + process.env.NELA_DEBUG);
+
+function logger(message) {
+  if (process.env.NELA_DEBUG === "true") {
+    console.log(message);
+  }
+}
+
+// will log the message only if the NELA_DEBUG environment variable is set to true
+logger("DEBUG mode enabled");
 
 app.use(bodyParser.json());
 
@@ -60,20 +72,20 @@ function calculateNelaRisk(input) {
     const soilingComponent = input.soiling ? 0.29453 : 0;
 
     // Log each component to debug
-    console.log("Age Component:", ageComponent);
-    console.log("ASA Component:", asaComponent);
-    console.log("ASA-Age Interaction:", asaAgeInteraction);
-    console.log("Albumin Component:", albuminComponent);
-    console.log("Pulse Component:", pulseComponent);
-    console.log("Systolic BP Component:", systolicBP_Component);
-    console.log("Ln Urea Component:", lnUreaComponent);
-    console.log("Ln WBC Component:", lnWBCComponent);
-    console.log("GCS Component:", gcsComponent);
-    console.log("Malignancy Component:", malignancyComponent);
-    console.log("Respiratory Component:", respiratoryComponent);
-    console.log("Urgency Component:", urgencyComponent);
-    console.log("Indication Component:", indicationComponent);
-    console.log("Soiling Component:", soilingComponent);
+    logger(`Age Component: ${ageComponent}`);
+    logger(`ASA Component: ${asaComponent}`);
+    logger(`ASA-Age Interaction: ${asaAgeInteraction}`);
+    logger(`Albumin Component: ${albuminComponent}`);
+    logger(`Pulse Component: ${pulseComponent}`);
+    logger(`Systolic BP Component: ${systolicBP_Component}`);
+    logger(`Ln Urea Component: ${lnUreaComponent}`);
+    logger(`Ln WBC Component: ${lnWBCComponent}`);
+    logger(`GCS Component: ${gcsComponent}`);
+    logger(`Malignancy Component: ${malignancyComponent}`);
+    logger(`Respiratory Component: ${respiratoryComponent}`);
+    logger(`Urgency Component: ${urgencyComponent}`);
+    logger(`Indication Component: ${indicationComponent}`);
+    logger(`Soiling Component: ${soilingComponent}`);
 
     // store these logged components in an object
     const components = {
@@ -115,10 +127,10 @@ function calculateNelaRisk(input) {
     const predictedRisk = 1 / (1 + Math.exp(-logit));
 
     // Log the final logit and predicted risk
-    console.log("Final Logit:", logit);
-    console.log("Predicted Risk:", (predictedRisk * 100).toFixed(2));
+    logger(`Final Logit: ${logit}`);
+    logger(`Predicted Risk: ${parseFloat((predictedRisk * 100).toFixed(2))}`);
 
-    return { predictedRisk: predictedRisk * 100, debug: components };
+    return { predictedRisk: parseFloat((predictedRisk * 100).toFixed(2)), debug: components };
   } catch (error) {
     throw "Error calculating NELA risk: " + error;
   }
@@ -127,7 +139,7 @@ function calculateNelaRisk(input) {
 // Define the API route
 app.post("/nela-risk", (req, res) => {
   try {
-    console.log("NELA Risk Calculation Request:", req.body);
+    logger("NELA Risk Calculation Request:", req.body);
     const {
       age,
       heartRate,
@@ -179,13 +191,13 @@ app.post("/nela-risk", (req, res) => {
     };
 
     const { predictedRisk, debug } = calculateNelaRisk(input);
-    if (predictedRisk.toFixed(2) < 0 || predictedRisk.toFixed(2) > 100) {
+    if (predictedRisk < 0 || predictedRisk > 100) {
       throw new Error("Invalid input");
     }
     if (isNaN(predictedRisk)) {
       throw new Error("Invalid input");
     }
-    res.json({ predictedRisk: predictedRisk.toFixed(2), debug });
+    res.json({ predictedRisk: predictedRisk, debug });
   } catch (error) {
     console.error("Error calculating NELA risk:", error);
     res.status(400).json({ error: "Invalid input" });
@@ -204,7 +216,7 @@ app.get("/schema.json", (req, res) => {
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  logger(`Server is running on http://localhost:${PORT}`);
 });
 
 module.exports = { calculateNelaRisk };
