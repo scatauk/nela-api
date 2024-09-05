@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const path = require("path");
 require("dotenv").config();
 
-console.log('Logging status = ' + process.env.NELA_DEBUG);
-
 function logger(message) {
   if (process.env.NELA_DEBUG === "true") {
     console.log(message);
@@ -17,7 +15,42 @@ logger("DEBUG mode enabled");
 
 app.use(bodyParser.json());
 
+function checkSchema(schema) {
+  // load schema from schema.json and check input matches the types listed
+  try {
+    const schemaFile = require("./schema.json");
+    const inputKeys = Object.keys(schema);
+    const schemaKeys = Object.keys(schemaFile.properties);
+    const schemaTypes = Object.values(schemaFile.properties).map((x) => x.type);
+    const inputTypes = Object.values(schema).map((x) => typeof x);
+    if (inputKeys.length !== schemaKeys.length) {
+      return { result: false, error: "Input keys do not match schema keys" };
+    }
+    for (let i = 0; i < schemaKeys.length; i++) {
+      logger(`Checking ${inputKeys[i]}: ${inputTypes[i]} against ${schemaKeys[i]}: ${schemaTypes[i]}`);
+      if (inputKeys[i] !== schemaKeys[i] || inputTypes[i] !== schemaTypes[i]) {
+        if (schemaTypes[i] === "integer" && inputTypes[i] === "number") {
+          continue;
+        } else {
+          return {
+            result: false,
+            error: `Input type mismatch for ${inputKeys[i]} (it is '${inputTypes[i]}' but should be '${schemaTypes[i]}')`,
+          };
+        }
+      }
+    }
+    return { result: true };
+  } catch (error) {
+    return { result: false, error: "Error checking schema" };
+  }
+}
+
 function calculateNelaRisk(input) {
+  // Check if input is valid
+  const validate = checkSchema(input);
+  if (!validate.result) {
+    throw validate.error;
+  }
   try {
     // Centered variables
     const ageCent = input.age - 64;
@@ -52,7 +85,7 @@ function calculateNelaRisk(input) {
           : input.malignancy === "primary"
             ? 0.19201
             : 0;
-    const respiratoryComponent = input.dyspnoea === "2" ? 0.35378 : input.dyspnoea === "3" ? 0.607 : 0;
+    const respiratoryComponent = input.dyspnoea === 2 ? 0.35378 : input.dyspnoea === 3 ? 0.607 : 0;
     const urgencyComponent =
       input.urgency === "<2hrs"
         ? 0.5731
@@ -199,7 +232,7 @@ app.post("/nela-risk", (req, res) => {
     }
     res.json({ predictedRisk: predictedRisk, debug });
   } catch (error) {
-    console.error("Error calculating NELA risk:", error);
+    logger("Error calculating NELA risk:", error);
     res.status(400).json({ error: "Invalid input" });
   }
 });

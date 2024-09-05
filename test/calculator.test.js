@@ -13,11 +13,11 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: 0,
+      malignancy: "nodal",
       dyspnoea: 0,
-      urgency: 1,
-      indicationForSurgery: 1,
-      soiling: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
     };
     const result = calculateNelaRisk(input);
     expect(result).toMatchObject({
@@ -25,6 +25,244 @@ describe("calculateNelaRisk function", () => {
       debug: expect.any(Object),
     });
   });
+  // age, heartRate, systolicBloodPressure, urea, whiteBloodCellCount, albumin, asaGrade, glasgowComaScore, malignancy, dyspnoea, urgency, indicationForSurgery, soiling
+  test("invalid age type throws an error", () => {
+    const input = {
+      age: "65",
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for age");
+  });
+  test("invalid heartRate type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: "80",
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for heartRate");
+  });
+  test("invalid systolicBloodPressure type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: "120",
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for systolicBloodPressure");
+  });
+  test("invalid urea type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: "5",
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for urea");
+  });
+  test("invalid whiteBloodCellCount type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: "10.4",
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for whiteBloodCellCount");
+  });
+  test("invalid albumin type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: "30",
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for albumin");
+  });
+  test("invalid asaGrade type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: "2",
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for asaGrade");
+  });
+  test("invalid gcs type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: "alert",
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for glasgowComaScore");
+  });
+  test("invalid malignancy type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: 3,
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for malignancy");
+  });
+  test("invalid dyspnoea type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: "3",
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError(
+      "Input type mismatch for dyspnoea (it is 'string' but should be 'integer')",
+    );
+  });
+  test("invalid urgency type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: 2,
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for urgency");
+  });
+  test("invalid indicationForSurgery type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: 3,
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for indicationForSurgery");
+  });
+  test("invalid soiling type throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 15,
+      malignancy: "nodal",
+      dyspnoea: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: 1,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for soiling");
+  });
+
   // check predictRisk is between 0 and 100
   test("predictedRisk is between 0 and 100", () => {
     const input = {
@@ -36,11 +274,11 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: 0,
+      malignancy: "nodal",
       dyspnoea: 0,
-      urgency: 1,
-      indicationForSurgery: 1,
-      soiling: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
     };
     const result = calculateNelaRisk(input);
     expect(result.predictedRisk).toBeGreaterThanOrEqual(0);
@@ -57,11 +295,11 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: 0,
+      malignancy: "nodal",
       dyspnoea: 0,
-      urgency: 1,
-      indicationForSurgery: 1,
-      soiling: 0,
+      urgency: "2-6hrs",
+      indicationForSurgery: "sepsis",
+      soiling: true,
     };
     const result = calculateNelaRisk(input);
     expect(result.predictedRisk).not.toBeNaN();
@@ -78,7 +316,7 @@ describe("calculateNelaRisk function", () => {
       asaGrade: 3,
       glasgowComaScore: 14,
       malignancy: "nodal",
-      dyspnoea: "3",
+      dyspnoea: 3,
       urgency: "2-6hrs",
       indicationForSurgery: "sepsis",
       soiling: true,
@@ -86,10 +324,7 @@ describe("calculateNelaRisk function", () => {
     const result = calculateNelaRisk(input);
     expect(result.predictedRisk).toBe(22.15);
   });
-  test("calculateNelaRisk function with invalid input throws an error", () => {
-    expect(() => calculateNelaRisk(null)).toThrowError(
-      "Error calculating NELA risk: TypeError: Cannot read properties of null (reading 'age')",
-    );
+  test("invalid input throws an error", () => {
+    expect(() => calculateNelaRisk(null)).toThrowError();
   });
 });
-
