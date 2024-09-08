@@ -78,20 +78,25 @@ function calculateNelaRisk(input) {
     const lnWBCComponent = 0.02041 * lnWBCCent + 0.24153 * Math.pow(lnWBCCent, 2);
     const gcsComponent = input.glasgowComaScore < 14 ? 0.6448 : input.glasgowComaScore === 14 ? 0.41557 : 0;
     const malignancyComponent =
-      input.malignancy === "nodal"
+      input.malignancy === "Nodal"
         ? 0.5061
-        : input.malignancy === "distant"
+        : input.malignancy === "Distant"
           ? 0.94309
-          : input.malignancy === "primary"
+          : input.malignancy === "Primary only"
             ? 0.19201
             : 0;
-    const respiratoryComponent = input.dyspnoea === 2 ? 0.35378 : input.dyspnoea === 3 ? 0.607 : 0;
+    const respiratoryComponent =
+      input.dyspnoea === "Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD"
+        ? 0.35378
+        : input.dyspnoea === "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation"
+          ? 0.607
+          : 0;
     const urgencyComponent =
-      input.urgency === "<2hrs"
+      input.urgency === "LT 2"
         ? 0.5731
-        : input.urgency === "2-6hrs"
+        : input.urgency === "BT 2 - 6"
           ? 0.14779
-          : input.urgency === "6-18hrs"
+          : input.urgency === "BT 6 - 18"
             ? 0.03782
             : 0;
     const indicationComponent =

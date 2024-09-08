@@ -11,7 +11,7 @@
     "asaGrade": { "type": "integer", "name": "ASA grade", "value": 3 },
     "glasgowComaScore": { "type": "integer", "name": "Glasgow Coma Score", "value": 14 },
     "malignancy": { "type": "string", "name": "malignancy status",  "value": "nodal" },
-    "dyspnoea": { "type": "integer", "name": "dyspnoea status", "value": 3 },
+    "dyspnoea": { "type": "string", "name": "dyspnoea status", "value": "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation" },
     "urgency": { "type": "string", "name": "urgency of surgery", "value": "2-6hrs" },
     "indicationForSurgery": { "type": "string", "name": "indication for surgery", "value": "sepsis" },
     "soiling": { "type": "boolean", "name": "soiling status", "value": true }

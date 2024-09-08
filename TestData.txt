@@ -9,9 +9,9 @@ curl -X POST http://localhost:3000/nela-risk \
     "albumin": 30,
     "asaGrade": 3,
     "glasgowComaScore": 14,
-    "malignancy": "nodal",
-    "dyspnoea": "3",
-    "urgency": "2-6hrs",
+    "malignancy": "Nodal",
+    "dyspnoea": "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation",
+    "urgency": "BT 2 - 6",
     "indicationForSurgery": "sepsis",
     "soiling": true
 }'
