@@ -25,6 +25,14 @@ describe("calculateNelaRisk function", () => {
       debug: expect.any(Object),
     });
   });
+  test("invalid input schema throws an error", () => {
+    const input = {
+      cows: "milk",
+      latest: 80,
+      understood: { yes: "no" },
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError("Input keys do not match schema keys");
+  });
   // age, heartRate, systolicBloodPressure, urea, whiteBloodCellCount, albumin, asaGrade, glasgowComaScore, malignancy, dyspnoea, urgency, indicationForSurgery, soiling
   test("invalid age type throws an error", () => {
     const input = {
@@ -327,4 +335,40 @@ describe("calculateNelaRisk function", () => {
   test("invalid input throws an error", () => {
     expect(() => calculateNelaRisk(null)).toThrowError();
   });
+});
+describe("Test vectors file", () => {
+  // load sim.csv
+  const fs = require("fs");
+  const path = require("path");
+  // read whole of sim.csv into variable
+  const data = fs.readFileSync(path.resolve(__dirname, "../test/sim.csv"), "utf8");
+  // split into lines
+  const lines = data.split("\n");
+  // for each line, split into fields
+  // for (let i = 1; i < lines.length; i++) {
+  for (let i = 100; i < 102; i++) {
+    const fields = lines[i].split(",");
+    // for each field, convert to correct type
+    const input = {
+      age: parseInt(fields[1]),
+      heartRate: parseInt(fields[4]),
+      systolicBloodPressure: parseInt(fields[5]),
+      urea: parseFloat(fields[6]),
+      whiteBloodCellCount: parseFloat(fields[7]),
+      albumin: parseFloat(fields[3]),
+      asaGrade: parseInt(fields[2]),
+      glasgowComaScore: parseInt(fields[8]),
+      malignancy: fields[9],
+      dyspnoea: fields[10],
+      urgency: fields[11],
+      indicationForSurgery: fields[12],
+      soiling: fields[44] === "true",
+    };
+    console.log(input);
+    // check predictedRisk is correct
+    test(`predictedRisk is correct for test vector ${i}`, () => {
+      const result = calculateNelaRisk(input);
+      expect(result.predictedRisk).toBeCloseTo(parseFloat(fields[78]), 2);
+    });
+  }
 });
