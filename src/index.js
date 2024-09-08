@@ -27,7 +27,6 @@ function checkSchema(schema) {
       return { result: false, error: "Input keys do not match schema keys" };
     }
     for (let i = 0; i < schemaKeys.length; i++) {
-      logger(`Checking ${inputKeys[i]}: ${inputTypes[i]} against ${schemaKeys[i]}: ${schemaTypes[i]}`);
       if (inputKeys[i] !== schemaKeys[i] || inputTypes[i] !== schemaTypes[i]) {
         if (schemaTypes[i] === "integer" && inputTypes[i] === "number") {
           continue;

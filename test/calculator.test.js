@@ -2,6 +2,113 @@
 import { describe, expect, test } from "vitest";
 import { calculateNelaRisk } from "../src/index.js";
 
+function getIndications(fields) {
+  const output = {};
+  // output.ind_ischaemia = fields[12] === "Indicated";
+  output.indNecrosis = fields[35] === "Indicated";
+  output.indIschaemia = fields[36] === "Indicated";
+  output.indAcidosis = fields[37] === "Indicated";
+  output.indColitis = fields[38] === "Indicated";
+  // output.ind_sepsis = fields[17] === "Indicated";
+  output.indPhlegmon = fields[26] === "Indicated";
+  output.indPneumoperitoneum = fields[27] === "Indicated";
+  output.indSepsisOther = fields[34] === "Indicated";
+  output.indIatrogenicInjury = fields[28] === "Indicated";
+  output.indAnastomoticLeak = fields[29] === "Indicated";
+  output.indPerforation = fields[30] === "Indicated";
+  output.indPeritonitis = fields[31] === "Indicated";
+  output.indAbdominalAbscess = fields[32] === "Indicated";
+  output.indIntestinalFistula = fields[33] === "Indicated";
+  // output.ind_obst = fields[27] === "Indicated";
+  output.indTenderSmallBowelObstruction = fields[24] === "Indicated";
+  output.indNonTenderSmallBowelObstruction = fields[22] === "Indicated";
+  output.indTenderLargeBowelObstruction = fields[23] === "Indicated";
+  output.indNonTenderLargeBowelObstruction = fields[21] === "Indicated";
+  output.indGastricOutletObstruction = fields[20] === "Indicated";
+  output.indIncarceratedHernia = fields[14] === "Indicated";
+  output.indHiatusHernia = fields[25] === "Indicated";
+  output.indVolvulus = fields[13] === "Indicated";
+  output.indInternalHernia = fields[15] === "Indicated";
+  output.indObstructingIncisionalHernia = fields[16] === "Indicated";
+  output.indIntussusception = fields[17] === "Indicated";
+  output.indPseudoObstruction = fields[18] === "Indicated";
+  output.indForeignBody = fields[19] === "Indicated";
+  // output.ind_bleed = fields[41] === "Indicated";
+  output.indHaemorrhage = fields[12] === "Indicated";
+  output.indAbdominalWoundDehiscence = fields[39] === "Indicated";
+  output.indAbdominalCompartmentSyndrome = fields[40] === "Indicated";
+  output.indPlannedRelook = fields[41] === "Indicated";
+  output.indOther = fields[42] === "Indicated";
+  console.log(output);
+  return output;
+}
+
+function maxIndication(input) {
+  console.table(input);
+  let maxInd = 0;
+  if (
+    input.ind_ischaemia == 1 ||
+    input.indNecrosis == 1 ||
+    input.indIschaemia == 1 ||
+    input.indAcidosis == 1 ||
+    input.indColitis == 1
+  ) {
+    maxInd = 3; //Ischaemia
+  } else if (
+    input.ind_sepsis == 1 ||
+    input.indPhlegmon == 1 ||
+    input.indPneumoperitoneum == 1 ||
+    input.indSepsisOther == 1 ||
+    input.indIatrogenicInjury == 1 ||
+    input.indAnastomoticLeak == 1 ||
+    input.indPerforation == 1 ||
+    input.indPeritonitis == 1 ||
+    input.indAbdominalAbscess == 1 ||
+    input.indIntestinalFistula == 1
+  ) {
+    maxInd = 2; //Sepsis
+  } else if (
+    input.ind_obst == 1 ||
+    input.indTenderSmallBowelObstruction == 1 ||
+    input.indNonTenderSmallBowelObstruction == 1 ||
+    input.indTenderLargeBowelObstruction == 1 ||
+    input.indNonTenderLargeBowelObstruction == 1 ||
+    input.indGastricOutletObstruction == 1 ||
+    input.indIncarceratedHernia == 1 ||
+    input.indHiatusHernia == 1 ||
+    input.indVolvulus == 1 ||
+    input.indInternalHernia == 1 ||
+    input.indObstructingIncisionalHernia == 1 ||
+    input.indIntussusception == 1 ||
+    input.indPseudoObstruction == 1 ||
+    input.indForeignBody == 1
+  ) {
+    maxInd = 1; //Obstruction
+  } else if (
+    input.indAbdominalWoundDehiscence == 1 ||
+    input.indAbdominalCompartmentSyndrome == 1 ||
+    input.indPlannedRelook == 1 ||
+    input.indOther == 1
+  ) {
+    maxInd = 5; //Other
+  } else if (input.ind_bleed == 1 || input.indHaemorrhage == 1) {
+    maxInd = 4; //Bleeding
+  }
+  switch (maxInd) {
+    case 1:
+      return "obstruction";
+    case 2:
+      return "sepsis";
+    case 3:
+      return "ischaemia";
+    case 4:
+      return "bleeding";
+    case 5:
+      return "other";
+  }
+  return "none";
+}
+
 describe("calculateNelaRisk function", () => {
   test("call with with valid input returns an object with predictedRisk and debug keys", () => {
     const input = {
@@ -361,7 +468,7 @@ describe("Test vectors file", () => {
       malignancy: fields[9],
       dyspnoea: fields[10],
       urgency: fields[11],
-      indicationForSurgery: fields[12],
+      indicationForSurgery: maxIndication(getIndications(fields)),
       soiling: fields[44] === "true",
     };
     console.log(input);
