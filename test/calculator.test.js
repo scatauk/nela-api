@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { calculateNelaRisk } from "../src/index.js";
+import { calculateNelaRisk } from "../src/calculate.js";
+import logger from "../src/logger.js";
 
 function getIndications(fields) {
   const output = {};
