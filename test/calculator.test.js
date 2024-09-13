@@ -1,4 +1,3 @@
-// sum.test.js
 import { describe, expect, test } from "vitest";
 import { calculateNelaRisk } from "../src/index.js";
 
@@ -39,60 +38,52 @@ function getIndications(fields) {
   output.indAbdominalCompartmentSyndrome = fields[40] === "Indicated";
   output.indPlannedRelook = fields[41] === "Indicated";
   output.indOther = fields[42] === "Indicated";
-  console.log(output);
   return output;
 }
 
 function maxIndication(input) {
-  console.table(input);
   let maxInd = 0;
-  if (
-    input.ind_ischaemia == 1 ||
-    input.indNecrosis == 1 ||
-    input.indIschaemia == 1 ||
-    input.indAcidosis == 1 ||
-    input.indColitis == 1
-  ) {
+  if (input.ind_ischaemia || input.indNecrosis || input.indIschaemia || input.indAcidosis || input.indColitis) {
     maxInd = 3; //Ischaemia
   } else if (
-    input.ind_sepsis == 1 ||
-    input.indPhlegmon == 1 ||
-    input.indPneumoperitoneum == 1 ||
-    input.indSepsisOther == 1 ||
-    input.indIatrogenicInjury == 1 ||
-    input.indAnastomoticLeak == 1 ||
-    input.indPerforation == 1 ||
-    input.indPeritonitis == 1 ||
-    input.indAbdominalAbscess == 1 ||
-    input.indIntestinalFistula == 1
+    input.ind_sepsis ||
+    input.indPhlegmon ||
+    input.indPneumoperitoneum ||
+    input.indSepsisOther ||
+    input.indIatrogenicInjury ||
+    input.indAnastomoticLeak ||
+    input.indPerforation ||
+    input.indPeritonitis ||
+    input.indAbdominalAbscess ||
+    input.indIntestinalFistula
   ) {
     maxInd = 2; //Sepsis
   } else if (
-    input.ind_obst == 1 ||
-    input.indTenderSmallBowelObstruction == 1 ||
-    input.indNonTenderSmallBowelObstruction == 1 ||
-    input.indTenderLargeBowelObstruction == 1 ||
-    input.indNonTenderLargeBowelObstruction == 1 ||
-    input.indGastricOutletObstruction == 1 ||
-    input.indIncarceratedHernia == 1 ||
-    input.indHiatusHernia == 1 ||
-    input.indVolvulus == 1 ||
-    input.indInternalHernia == 1 ||
-    input.indObstructingIncisionalHernia == 1 ||
-    input.indIntussusception == 1 ||
-    input.indPseudoObstruction == 1 ||
-    input.indForeignBody == 1
+    input.ind_obst ||
+    input.indTenderSmallBowelObstruction ||
+    input.indNonTenderSmallBowelObstruction ||
+    input.indTenderLargeBowelObstruction ||
+    input.indNonTenderLargeBowelObstruction ||
+    input.indGastricOutletObstruction ||
+    input.indIncarceratedHernia ||
+    input.indHiatusHernia ||
+    input.indVolvulus ||
+    input.indInternalHernia ||
+    input.indObstructingIncisionalHernia ||
+    input.indIntussusception ||
+    input.indPseudoObstruction ||
+    input.indForeignBody
   ) {
     maxInd = 1; //Obstruction
+  } else if (input.ind_bleed || input.indHaemorrhage) {
+    maxInd = 4; //Bleeding
   } else if (
-    input.indAbdominalWoundDehiscence == 1 ||
-    input.indAbdominalCompartmentSyndrome == 1 ||
-    input.indPlannedRelook == 1 ||
-    input.indOther == 1
+    input.indAbdominalWoundDehiscence ||
+    input.indAbdominalCompartmentSyndrome ||
+    input.indPlannedRelook ||
+    input.indOther
   ) {
     maxInd = 5; //Other
-  } else if (input.ind_bleed == 1 || input.indHaemorrhage == 1) {
-    maxInd = 4; //Bleeding
   }
   switch (maxInd) {
     case 1:
@@ -437,12 +428,13 @@ describe("calculateNelaRisk function", () => {
       soiling: true,
     };
     const result = calculateNelaRisk(input);
-    expect(result.predictedRisk).toBe(22.15);
+    expect(result.predictedRisk).toBe(22.151);
   });
   test("invalid input throws an error", () => {
     expect(() => calculateNelaRisk(null)).toThrowError();
   });
 });
+
 describe("Test vectors file", () => {
   // load sim.csv
   const fs = require("fs");
@@ -452,8 +444,8 @@ describe("Test vectors file", () => {
   // split into lines
   const lines = data.split("\n");
   // for each line, split into fields
-  // for (let i = 1; i < lines.length; i++) {
-  for (let i = 100; i < 102; i++) {
+  for (let i = 1; i < lines.length; i++) {
+    // for (let i = 4175; i < 4176; i++) {
     const fields = lines[i].split(",");
     // for each field, convert to correct type
     const input = {
@@ -469,13 +461,15 @@ describe("Test vectors file", () => {
       dyspnoea: fields[10],
       urgency: fields[11],
       indicationForSurgery: maxIndication(getIndications(fields)),
-      soiling: fields[44] === "true",
+      soiling: fields[43] === "Free pus blood or bowel contents",
     };
-    console.log(input);
-    // check predictedRisk is correct
-    test(`predictedRisk is correct for test vector ${i}`, () => {
-      const result = calculateNelaRisk(input);
-      expect(result.predictedRisk).toBeCloseTo(parseFloat(fields[78]), 2);
-    });
+    // fields[46] is intercept - skip if empty
+    if (fields[46] !== "") {
+      // check predictedRisk is correct
+      test(`predictedRisk is correct for test vector ${i}`, () => {
+        const result = calculateNelaRisk(input);
+        expect(result.predictedRisk).toBe(parseFloat(fields[78]));
+      });
+    }
   }
 });

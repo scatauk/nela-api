@@ -53,10 +53,14 @@ function calculateNelaRisk(input) {
   try {
     // Centered variables
     const ageCent = input.age - 64;
-    const pulseCent = Math.max(input.heartRate, 40) - 91;
-    const systolicBP_Cent = input.systolicBloodPressure - 127;
-    const lnUreaCent = Math.log(input.urea) - 1.9;
-    const lnWBCCent = Math.log(input.whiteBloodCellCount) - 2.4;
+    const pulseCent = Math.min(145, Math.max(55, input.heartRate)) - 91;
+    const systolicBP_Cent = Math.min(190, Math.max(70, input.systolicBloodPressure)) - 127;
+
+    let ureaCent = Math.log(input.urea, 1);
+    ureaCent = Math.min(3.7, Math.max(0.5, ureaCent)) - 1.9;
+
+    let wccCent = Math.log(input.whiteBloodCellCount);
+    wccCent = Math.min(3.6, Math.max(0.8, wccCent)) - 2.4;
 
     // Calculate individual components
     const ageComponent = 0.0666 * ageCent;
@@ -70,11 +74,11 @@ function calculateNelaRisk(input) {
           : input.asaGrade === 5
             ? -0.04676 * ageCent
             : 0;
-    const albuminComponent = -0.04323 * input.albumin;
+    const albuminComponent = -0.04323 * Math.min(55, Math.max(10, input.albumin));
     const pulseComponent = 0.01265 * pulseCent - 0.00012 * Math.pow(pulseCent, 2);
     const systolicBP_Component = -0.00683 * systolicBP_Cent + 0.00011 * Math.pow(systolicBP_Cent, 2);
-    const lnUreaComponent = 0.38002 * lnUreaCent;
-    const lnWBCComponent = 0.02041 * lnWBCCent + 0.24153 * Math.pow(lnWBCCent, 2);
+    const lnUreaComponent = 0.38002 * ureaCent;
+    const lnWBCComponent = 0.02041 * wccCent + 0.24153 * Math.pow(wccCent, 2);
     const gcsComponent = input.glasgowComaScore < 14 ? 0.6448 : input.glasgowComaScore === 14 ? 0.41557 : 0;
     const malignancyComponent =
       input.malignancy === "Nodal"
@@ -85,9 +89,10 @@ function calculateNelaRisk(input) {
             ? 0.19201
             : 0;
     const respiratoryComponent =
-      input.dyspnoea === "Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD"
+      input.dyspnoea === "Dyspnoea on exertion or CXR: mild COAD"
         ? 0.35378
-        : input.dyspnoea === "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation"
+        : input.dyspnoea === "Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD" ||
+            input.dyspnoea === "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation"
           ? 0.607
           : 0;
     const urgencyComponent =
@@ -165,9 +170,9 @@ function calculateNelaRisk(input) {
 
     // Log the final logit and predicted risk
     logger(`Final Logit: ${logit}`);
-    logger(`Predicted Risk: ${parseFloat((predictedRisk * 100).toFixed(2))}`);
+    logger(`Predicted Risk: ${parseFloat((predictedRisk * 100).toFixed(3))}`);
 
-    return { predictedRisk: parseFloat((predictedRisk * 100).toFixed(2)), debug: components };
+    return { predictedRisk: parseFloat((predictedRisk * 100).toFixed(3)), debug: components };
   } catch (error) {
     throw "Error calculating NELA risk: " + error;
   }
