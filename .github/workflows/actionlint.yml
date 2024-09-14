@@ -1,4 +1,4 @@
-name: Lint GitHub workflows
+name: Check GitHub workflows
 
 on: [push, pull_request]
 
