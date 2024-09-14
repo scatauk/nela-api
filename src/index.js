@@ -1,20 +1,20 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const bodyParser = require("body-parser");
-const path = require("path");
-const { calculateNelaRisk } = require("./calculate");
-const { logger } = require("./logger");
-require("dotenv").config();
+const bodyParser = require('body-parser');
+const path = require('path');
+const { calculateNelaRisk } = require('./calculate');
+const { logger } = require('./logger');
+require('dotenv').config();
 
 // will log the message only if the NELA_DEBUG environment variable is set to true
-logger("DEBUG mode enabled");
+logger('DEBUG mode enabled');
 
 app.use(bodyParser.json());
 
 // Define the API route
-app.post("/nela-risk", (req, res) => {
+app.post('/nela-risk', (req, res) => {
   try {
-    logger("NELA Risk Calculation Request:", req.body);
+    logger('NELA Risk Calculation Request:', req.body);
     const {
       age,
       heartRate,
@@ -46,7 +46,7 @@ app.post("/nela-risk", (req, res) => {
       indicationForSurgery == null ||
       soiling == null
     ) {
-      return res.status(400).json({ error: "Missing required fields" });
+      return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const input = {
@@ -67,25 +67,25 @@ app.post("/nela-risk", (req, res) => {
 
     const { predictedRisk, debug } = calculateNelaRisk(input);
     if (predictedRisk < 0 || predictedRisk > 100) {
-      throw new Error("Invalid input");
+      throw new Error('Invalid input');
     }
     if (isNaN(predictedRisk)) {
-      throw new Error("Invalid input");
+      throw new Error('Invalid input');
     }
     res.json({ predictedRisk: predictedRisk, debug });
   } catch (error) {
-    logger("Error calculating NELA risk:", error);
-    res.status(400).json({ error: "Invalid input" });
+    logger('Error calculating NELA risk:', error);
+    res.status(400).json({ error: 'Invalid input' });
   }
 });
 
 // return html page if called with '/' route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../") + "/frontend/index.html");
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../') + '/frontend/index.html');
 });
 
-app.get("/schema.json", (req, res) => {
-  res.sendFile(__dirname + "/schema.json");
+app.get('/schema.json', (req, res) => {
+  res.sendFile(__dirname + '/schema.json');
 });
 
 // Start the server

@@ -1,26 +1,35 @@
-import prettier from "eslint-plugin-prettier";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+import globals from 'globals';
+import js from '@eslint/js';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default [
-  ...compat.extends("prettier"),
   {
-    plugins: {
-      prettier,
+    files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
+    ignores: ['node_modules', 'coverage', 'dist'],
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
     },
-
+  },
+  js.configs.recommended,
+  prettierRecommended,
+  {
     rules: {
-      "prettier/prettier": ["error"],
+      'no-console': 'warn',
+      'prettier/prettier': [
+        'error',
+        {
+          tabWidth: 2,
+          useTabs: false,
+          printWidth: 120,
+          semi: true,
+          singleQuote: true,
+        },
+      ],
     },
   },
 ];

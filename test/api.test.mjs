@@ -1,7 +1,7 @@
-import { afterAll, describe, expect, test, vi } from "vitest";
+import { afterAll, describe, expect, test, vi } from 'vitest';
 
-describe("debugging mode", () => {
-  const consoleMock = vi.spyOn(console, "log");
+describe('debugging mode', () => {
+  const consoleMock = vi.spyOn(console, 'log');
 
   afterAll(() => {
     consoleMock.mockReset();
@@ -15,7 +15,7 @@ describe("debugging mode", () => {
   //   vi.stubEnv("NELA_DEBUG", "false");
   //   expect(consoleMock).toHaveBeenLastCalledWith("sample output");
   // });
-  test("is turned off when NELA_DEBUG is not set", () => {
+  test('is turned off when NELA_DEBUG is not set', () => {
     expect(consoleMock).not.toHaveBeenCalled();
   });
 });

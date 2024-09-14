@@ -1,44 +1,42 @@
-import { describe, expect, test, vi, afterAll, beforeAll } from "vitest";
-import { calculateNelaRisk } from "../src/calculate.js";
-import logger from "../src/logger.js";
-
+import { describe, expect, test, vi, afterAll, beforeAll } from 'vitest';
+import { calculateNelaRisk } from '../src/calculate.js';
 function getIndications(fields) {
   const output = {};
   // output.ind_ischaemia = fields[12] === "Indicated";
-  output.indNecrosis = fields[35] === "Indicated";
-  output.indIschaemia = fields[36] === "Indicated";
-  output.indAcidosis = fields[37] === "Indicated";
-  output.indColitis = fields[38] === "Indicated";
+  output.indNecrosis = fields[35] === 'Indicated';
+  output.indIschaemia = fields[36] === 'Indicated';
+  output.indAcidosis = fields[37] === 'Indicated';
+  output.indColitis = fields[38] === 'Indicated';
   // output.ind_sepsis = fields[17] === "Indicated";
-  output.indPhlegmon = fields[26] === "Indicated";
-  output.indPneumoperitoneum = fields[27] === "Indicated";
-  output.indSepsisOther = fields[34] === "Indicated";
-  output.indIatrogenicInjury = fields[28] === "Indicated";
-  output.indAnastomoticLeak = fields[29] === "Indicated";
-  output.indPerforation = fields[30] === "Indicated";
-  output.indPeritonitis = fields[31] === "Indicated";
-  output.indAbdominalAbscess = fields[32] === "Indicated";
-  output.indIntestinalFistula = fields[33] === "Indicated";
+  output.indPhlegmon = fields[26] === 'Indicated';
+  output.indPneumoperitoneum = fields[27] === 'Indicated';
+  output.indSepsisOther = fields[34] === 'Indicated';
+  output.indIatrogenicInjury = fields[28] === 'Indicated';
+  output.indAnastomoticLeak = fields[29] === 'Indicated';
+  output.indPerforation = fields[30] === 'Indicated';
+  output.indPeritonitis = fields[31] === 'Indicated';
+  output.indAbdominalAbscess = fields[32] === 'Indicated';
+  output.indIntestinalFistula = fields[33] === 'Indicated';
   // output.ind_obst = fields[27] === "Indicated";
-  output.indTenderSmallBowelObstruction = fields[24] === "Indicated";
-  output.indNonTenderSmallBowelObstruction = fields[22] === "Indicated";
-  output.indTenderLargeBowelObstruction = fields[23] === "Indicated";
-  output.indNonTenderLargeBowelObstruction = fields[21] === "Indicated";
-  output.indGastricOutletObstruction = fields[20] === "Indicated";
-  output.indIncarceratedHernia = fields[14] === "Indicated";
-  output.indHiatusHernia = fields[25] === "Indicated";
-  output.indVolvulus = fields[13] === "Indicated";
-  output.indInternalHernia = fields[15] === "Indicated";
-  output.indObstructingIncisionalHernia = fields[16] === "Indicated";
-  output.indIntussusception = fields[17] === "Indicated";
-  output.indPseudoObstruction = fields[18] === "Indicated";
-  output.indForeignBody = fields[19] === "Indicated";
+  output.indTenderSmallBowelObstruction = fields[24] === 'Indicated';
+  output.indNonTenderSmallBowelObstruction = fields[22] === 'Indicated';
+  output.indTenderLargeBowelObstruction = fields[23] === 'Indicated';
+  output.indNonTenderLargeBowelObstruction = fields[21] === 'Indicated';
+  output.indGastricOutletObstruction = fields[20] === 'Indicated';
+  output.indIncarceratedHernia = fields[14] === 'Indicated';
+  output.indHiatusHernia = fields[25] === 'Indicated';
+  output.indVolvulus = fields[13] === 'Indicated';
+  output.indInternalHernia = fields[15] === 'Indicated';
+  output.indObstructingIncisionalHernia = fields[16] === 'Indicated';
+  output.indIntussusception = fields[17] === 'Indicated';
+  output.indPseudoObstruction = fields[18] === 'Indicated';
+  output.indForeignBody = fields[19] === 'Indicated';
   // output.ind_bleed = fields[41] === "Indicated";
-  output.indHaemorrhage = fields[12] === "Indicated";
-  output.indAbdominalWoundDehiscence = fields[39] === "Indicated";
-  output.indAbdominalCompartmentSyndrome = fields[40] === "Indicated";
-  output.indPlannedRelook = fields[41] === "Indicated";
-  output.indOther = fields[42] === "Indicated";
+  output.indHaemorrhage = fields[12] === 'Indicated';
+  output.indAbdominalWoundDehiscence = fields[39] === 'Indicated';
+  output.indAbdominalCompartmentSyndrome = fields[40] === 'Indicated';
+  output.indPlannedRelook = fields[41] === 'Indicated';
+  output.indOther = fields[42] === 'Indicated';
   return output;
 }
 
@@ -88,21 +86,21 @@ function maxIndication(input) {
   }
   switch (maxInd) {
     case 1:
-      return "obstruction";
+      return 'obstruction';
     case 2:
-      return "sepsis";
+      return 'sepsis';
     case 3:
-      return "ischaemia";
+      return 'ischaemia';
     case 4:
-      return "bleeding";
+      return 'bleeding';
     case 5:
-      return "other";
+      return 'other';
   }
-  return "none";
+  return 'none';
 }
 
-describe("calculateNelaRisk function", () => {
-  test("call with with valid input returns an object with predictedRisk and debug keys", () => {
+describe('calculateNelaRisk function', () => {
+  test('call with with valid input returns an object with predictedRisk and debug keys', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -112,10 +110,10 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     const result = calculateNelaRisk(input);
@@ -124,18 +122,18 @@ describe("calculateNelaRisk function", () => {
       debug: expect.any(Object),
     });
   });
-  test("invalid input schema throws an error", () => {
+  test('invalid input schema throws an error', () => {
     const input = {
-      cows: "milk",
+      cows: 'milk',
       latest: 80,
-      understood: { yes: "no" },
+      understood: { yes: 'no' },
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input keys do not match schema keys");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input keys do not match schema keys');
   });
   // age, heartRate, systolicBloodPressure, urea, whiteBloodCellCount, albumin, asaGrade, glasgowComaScore, malignancy, dyspnoea, urgency, indicationForSurgery, soiling
-  test("invalid age type throws an error", () => {
+  test('invalid age type throws an error', () => {
     const input = {
-      age: "65",
+      age: '65',
       heartRate: 80,
       systolicBloodPressure: 120,
       urea: 5,
@@ -143,123 +141,105 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for age");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for age');
   });
-  test("invalid heartRate type throws an error", () => {
+  test('invalid heartRate type throws an error', () => {
     const input = {
       age: 65,
-      heartRate: "80",
+      heartRate: '80',
       systolicBloodPressure: 120,
       urea: 5,
       whiteBloodCellCount: 10,
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for heartRate");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for heartRate');
   });
-  test("invalid systolicBloodPressure type throws an error", () => {
+  test('invalid systolicBloodPressure type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
-      systolicBloodPressure: "120",
+      systolicBloodPressure: '120',
       urea: 5,
       whiteBloodCellCount: 10,
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for systolicBloodPressure");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for systolicBloodPressure');
   });
-  test("invalid urea type throws an error", () => {
+  test('invalid urea type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
       systolicBloodPressure: 120,
-      urea: "5",
+      urea: '5',
       whiteBloodCellCount: 10,
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for urea");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for urea');
   });
-  test("invalid whiteBloodCellCount type throws an error", () => {
+  test('invalid whiteBloodCellCount type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
       systolicBloodPressure: 120,
       urea: 5,
-      whiteBloodCellCount: "10.4",
+      whiteBloodCellCount: '10.4',
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for whiteBloodCellCount");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for whiteBloodCellCount');
   });
-  test("invalid albumin type throws an error", () => {
-    const input = {
-      age: 65,
-      heartRate: 80,
-      systolicBloodPressure: 120,
-      urea: 5,
-      whiteBloodCellCount: 10,
-      albumin: "30",
-      asaGrade: 2,
-      glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
-      soiling: true,
-    };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for albumin");
-  });
-  test("invalid asaGrade type throws an error", () => {
+  test('invalid albumin type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
       systolicBloodPressure: 120,
       urea: 5,
       whiteBloodCellCount: 10,
-      albumin: 30,
-      asaGrade: "2",
+      albumin: '30',
+      asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for asaGrade");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for albumin');
   });
-  test("invalid gcs type throws an error", () => {
+  test('invalid asaGrade type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -267,17 +247,35 @@ describe("calculateNelaRisk function", () => {
       urea: 5,
       whiteBloodCellCount: 10,
       albumin: 30,
-      asaGrade: 2,
-      glasgowComaScore: "alert",
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      asaGrade: '2',
+      glasgowComaScore: 15,
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for glasgowComaScore");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for asaGrade');
   });
-  test("invalid malignancy type throws an error", () => {
+  test('invalid gcs type throws an error', () => {
+    const input = {
+      age: 65,
+      heartRate: 80,
+      systolicBloodPressure: 120,
+      urea: 5,
+      whiteBloodCellCount: 10,
+      albumin: 30,
+      asaGrade: 2,
+      glasgowComaScore: 'alert',
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for glasgowComaScore');
+  });
+  test('invalid malignancy type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -288,14 +286,14 @@ describe("calculateNelaRisk function", () => {
       asaGrade: 2,
       glasgowComaScore: 15,
       malignancy: 3,
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for malignancy");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for malignancy');
   });
-  test("invalid dyspnoea type throws an error", () => {
+  test('invalid dyspnoea type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -305,17 +303,17 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
+      malignancy: 'Nodal',
       dyspnoea: 3,
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     expect(() => calculateNelaRisk(input)).toThrowError(
       "Input type mismatch for dyspnoea (it is 'number' but should be 'string')",
     );
   });
-  test("invalid urgency type throws an error", () => {
+  test('invalid urgency type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -325,15 +323,15 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
       urgency: 2,
-      indicationForSurgery: "sepsis",
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for urgency");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for urgency');
   });
-  test("invalid indicationForSurgery type throws an error", () => {
+  test('invalid indicationForSurgery type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -343,15 +341,15 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
       indicationForSurgery: 3,
       soiling: true,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for indicationForSurgery");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for indicationForSurgery');
   });
-  test("invalid soiling type throws an error", () => {
+  test('invalid soiling type throws an error', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -361,17 +359,17 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: 1,
     };
-    expect(() => calculateNelaRisk(input)).toThrowError("Input type mismatch for soiling");
+    expect(() => calculateNelaRisk(input)).toThrowError('Input type mismatch for soiling');
   });
 
   // check predictRisk is between 0 and 100
-  test("predictedRisk is between 0 and 100", () => {
+  test('predictedRisk is between 0 and 100', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -381,10 +379,10 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     const result = calculateNelaRisk(input);
@@ -392,7 +390,7 @@ describe("calculateNelaRisk function", () => {
     expect(result.predictedRisk).toBeLessThanOrEqual(100);
   });
   // check predictRisk is not NaN
-  test("predictedRisk is not NaN", () => {
+  test('predictedRisk is not NaN', () => {
     const input = {
       age: 65,
       heartRate: 80,
@@ -402,17 +400,17 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 2,
       glasgowComaScore: 15,
-      malignancy: "Nodal",
-      dyspnoea: "No dyspnoea",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'No dyspnoea',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     const result = calculateNelaRisk(input);
     expect(result.predictedRisk).not.toBeNaN();
   });
   // for test vectors, check predictedRisk is correct
-  test("predictedRisk is correct for test vectors", () => {
+  test('predictedRisk is correct for test vectors', () => {
     const input = {
       age: 65,
       heartRate: 85,
@@ -422,20 +420,20 @@ describe("calculateNelaRisk function", () => {
       albumin: 30,
       asaGrade: 3,
       glasgowComaScore: 14,
-      malignancy: "Nodal",
-      dyspnoea: "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     const result = calculateNelaRisk(input);
     expect(result.predictedRisk).toBe(22.151);
   });
-  test("invalid input throws an error", () => {
+  test('invalid input throws an error', () => {
     expect(() => calculateNelaRisk(null)).toThrowError();
   });
 });
-describe("Ancillary tests", () => {
+describe('Ancillary tests', () => {
   let originalMath;
   beforeAll(() => {
     originalMath = global.Math;
@@ -449,7 +447,7 @@ describe("Ancillary tests", () => {
   afterAll(() => {
     global.Math = originalMath;
   });
-  test("uncategorised failure (e.g. javascript Math functions unavailable) throws an error", () => {
+  test('uncategorised failure (e.g. javascript Math functions unavailable) throws an error', () => {
     const input = {
       age: 65,
       heartRate: 85,
@@ -459,28 +457,28 @@ describe("Ancillary tests", () => {
       albumin: 30,
       asaGrade: 3,
       glasgowComaScore: 14,
-      malignancy: "Nodal",
-      dyspnoea: "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation",
-      urgency: "BT 2 - 6",
-      indicationForSurgery: "sepsis",
+      malignancy: 'Nodal',
+      dyspnoea: 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation',
+      urgency: 'BT 2 - 6',
+      indicationForSurgery: 'sepsis',
       soiling: true,
     };
     expect(() => calculateNelaRisk(input)).toThrowError();
   });
 });
 
-describe("Test vectors file", () => {
+describe('Test vectors file', () => {
   // load sim.csv
-  const fs = require("fs");
-  const path = require("path");
+  const fs = require('fs');
+  const path = require('path');
   // read whole of sim.csv into variable
-  const data = fs.readFileSync(path.resolve(__dirname, "../test/sim.csv"), "utf8");
+  const data = fs.readFileSync(path.resolve(__dirname, '../test/sim.csv'), 'utf8');
   // split into lines
-  const lines = data.split("\n");
+  const lines = data.split('\n');
   // for each line, split into fields
   for (let i = 1; i < lines.length; i++) {
     // for (let i = 4175; i < 4176; i++) {
-    const fields = lines[i].split(",");
+    const fields = lines[i].split(',');
     // for each field, convert to correct type
     const input = {
       age: parseInt(fields[1]),
@@ -495,10 +493,10 @@ describe("Test vectors file", () => {
       dyspnoea: fields[10],
       urgency: fields[11],
       indicationForSurgery: maxIndication(getIndications(fields)),
-      soiling: fields[43] === "Free pus blood or bowel contents",
+      soiling: fields[43] === 'Free pus blood or bowel contents',
     };
     // fields[46] is intercept - skip if empty
-    if (fields[46] !== "") {
+    if (fields[46] !== '') {
       // check predictedRisk is correct
       test(`predictedRisk is correct for test vector ${i}`, () => {
         const result = calculateNelaRisk(input);

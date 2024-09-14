@@ -1,19 +1,19 @@
-const { logger } = require("./logger");
+const { logger } = require('./logger');
 
 function checkSchema(schema) {
   // load schema from schema.json and check input matches the types listed
   try {
-    const schemaFile = require("./schema.json");
+    const schemaFile = require('./schema.json');
     const inputKeys = Object.keys(schema);
     const schemaKeys = Object.keys(schemaFile.properties);
     const schemaTypes = Object.values(schemaFile.properties).map((x) => x.type);
     const inputTypes = Object.values(schema).map((x) => typeof x);
     if (inputKeys.length !== schemaKeys.length) {
-      return { result: false, error: "Input keys do not match schema keys" };
+      return { result: false, error: 'Input keys do not match schema keys' };
     }
     for (let i = 0; i < schemaKeys.length; i++) {
       if (inputKeys[i] !== schemaKeys[i] || inputTypes[i] !== schemaTypes[i]) {
-        if (schemaTypes[i] === "integer" && inputTypes[i] === "number") {
+        if (schemaTypes[i] === 'integer' && inputTypes[i] === 'number') {
           continue;
         } else {
           return {
@@ -25,7 +25,7 @@ function checkSchema(schema) {
     }
     return { result: true };
   } catch (error) {
-    return { result: false, error: "Error checking schema" };
+    return { result: false, error: 'Error checking schema', errorDetails: error };
   }
 }
 
@@ -66,34 +66,34 @@ function calculateNelaRisk(input) {
     const lnWBCComponent = 0.02041 * wccCent + 0.24153 * Math.pow(wccCent, 2);
     const gcsComponent = input.glasgowComaScore < 14 ? 0.6448 : input.glasgowComaScore === 14 ? 0.41557 : 0;
     const malignancyComponent =
-      input.malignancy === "Nodal"
+      input.malignancy === 'Nodal'
         ? 0.5061
-        : input.malignancy === "Distant"
+        : input.malignancy === 'Distant'
           ? 0.94309
-          : input.malignancy === "Primary only"
+          : input.malignancy === 'Primary only'
             ? 0.19201
             : 0;
     const respiratoryComponent =
-      input.dyspnoea === "Dyspnoea on exertion or CXR: mild COAD"
+      input.dyspnoea === 'Dyspnoea on exertion or CXR: mild COAD'
         ? 0.35378
-        : input.dyspnoea === "Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD" ||
-            input.dyspnoea === "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation"
+        : input.dyspnoea === 'Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD' ||
+            input.dyspnoea === 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation'
           ? 0.607
           : 0;
     const urgencyComponent =
-      input.urgency === "LT 2"
+      input.urgency === 'LT 2'
         ? 0.5731
-        : input.urgency === "BT 2 - 6"
+        : input.urgency === 'BT 2 - 6'
           ? 0.14779
-          : input.urgency === "BT 6 - 18"
+          : input.urgency === 'BT 6 - 18'
             ? 0.03782
             : 0;
     const indicationComponent =
-      input.indicationForSurgery === "sepsis"
+      input.indicationForSurgery === 'sepsis'
         ? 0.02812
-        : input.indicationForSurgery === "ischaemia"
+        : input.indicationForSurgery === 'ischaemia'
           ? 0.56948
-          : input.indicationForSurgery === "bleeding"
+          : input.indicationForSurgery === 'bleeding'
             ? -0.40615
             : 0;
     const soilingComponent = input.soiling ? 0.29453 : 0;
@@ -159,7 +159,7 @@ function calculateNelaRisk(input) {
 
     return { predictedRisk: parseFloat((predictedRisk * 100).toFixed(3)), debug: components };
   } catch (error) {
-    throw "Error calculating NELA risk: " + error;
+    throw 'Error calculating NELA risk: ' + error;
   }
 }
 
