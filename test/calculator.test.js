@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi, afterAll, beforeAll } from "vitest";
 import { calculateNelaRisk } from "../src/calculate.js";
 import logger from "../src/logger.js";
 
@@ -433,6 +433,39 @@ describe("calculateNelaRisk function", () => {
   });
   test("invalid input throws an error", () => {
     expect(() => calculateNelaRisk(null)).toThrowError();
+  });
+});
+describe("Ancillary tests", () => {
+  let originalMath;
+  beforeAll(() => {
+    originalMath = global.Math;
+    global.Math = {
+      min: vi.fn(),
+      max: vi.fn(),
+      pow: vi.fn(),
+      log: vi.fn(),
+    };
+  });
+  afterAll(() => {
+    global.Math = originalMath;
+  });
+  test("uncategorised failure (e.g. javascript Math functions unavailable) throws an error", () => {
+    const input = {
+      age: 65,
+      heartRate: 85,
+      systolicBloodPressure: 130,
+      urea: 7,
+      whiteBloodCellCount: 12,
+      albumin: 30,
+      asaGrade: 3,
+      glasgowComaScore: 14,
+      malignancy: "Nodal",
+      dyspnoea: "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation",
+      urgency: "BT 2 - 6",
+      indicationForSurgery: "sepsis",
+      soiling: true,
+    };
+    expect(() => calculateNelaRisk(input)).toThrowError();
   });
 });
 
