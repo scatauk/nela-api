@@ -102,3 +102,48 @@ describe('POST request to /nela-risk returns a risk score', () => {
     expect(body.predictedRisk).toBe(22.151);
   });
 });
+
+describe('POST request to /nela-risk with invalid input returns an error', () => {
+  let response;
+  let body;
+
+  beforeAll(async () => {
+    response = await fetch('http://localhost:3000/nela-risk', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        age: 65,
+        systolicBloodPressure: 130,
+        urea: 7,
+        whiteBloodCellCount: 12,
+        albumin: 30,
+        asaGrade: 3,
+        glasgowComaScore: 14,
+        malignancy: 'Nodal',
+        dyspnoea: 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation',
+        urgency: 'BT 2 - 6',
+        indicationForSurgery: 'sepsis',
+        soiling: true,
+      }),
+    });
+    body = await response.json();
+  }, BEFORE_ALL_TIMEOUT);
+
+  test('Should have response status 400', () => {
+    expect(response.status).toBe(400);
+  });
+
+  test('Should have content-type JSON', () => {
+    expect(response.headers.get('Content-Type')).toBe('application/json; charset=utf-8');
+  });
+
+  test('Should have array in the body', () => {
+    expectTypeOf(body).toBeArray();
+  });
+
+  test('Error message is `Missing required fields`', () => {
+    expect(body.error).toBe('Missing required fields');
+  });
+});
