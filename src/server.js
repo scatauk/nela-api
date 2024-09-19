@@ -66,12 +66,6 @@ function createServer() {
       };
 
       const { predictedRisk, debug } = calculateNelaRisk(input);
-      if (predictedRisk < 0 || predictedRisk > 100) {
-        throw new Error('Invalid input');
-      }
-      if (isNaN(predictedRisk)) {
-        throw new Error('Invalid input');
-      }
       res.json({ predictedRisk: predictedRisk, debug });
     } catch (error) {
       logger('Error calculating NELA risk:', error);

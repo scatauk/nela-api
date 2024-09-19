@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "vitest",
-    "coverage": "vitest --coverage",
+    "coverage": "npm run test -- --run --reporter verbose --coverage",
     "lint": "eslint"
   },
   "keywords": [],
@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
+    "@vitest/coverage-istanbul": "^2.1.1",
     "@eslint/js": "^9.10.0",
-    "@vitest/coverage-v8": "^2.1.1",
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
