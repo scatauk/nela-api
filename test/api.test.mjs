@@ -56,3 +56,49 @@ describe('Request to /schema.json returns the expected schema in JSON', () => {
     expect(body['$schema']).to.have.string('http://json-schema.org/draft-07/schema#');
   });
 });
+
+describe('POST request to /nela-risk returns a risk score', () => {
+  let response;
+  let body;
+
+  beforeAll(async () => {
+    response = await fetch('http://localhost:3000/nela-risk', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        age: 65,
+        heartRate: 85,
+        systolicBloodPressure: 130,
+        urea: 7,
+        whiteBloodCellCount: 12,
+        albumin: 30,
+        asaGrade: 3,
+        glasgowComaScore: 14,
+        malignancy: 'Nodal',
+        dyspnoea: 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation',
+        urgency: 'BT 2 - 6',
+        indicationForSurgery: 'sepsis',
+        soiling: true,
+      }),
+    });
+    body = await response.json();
+  }, BEFORE_ALL_TIMEOUT);
+
+  test('Should have response status 200', () => {
+    expect(response.status).toBe(200);
+  });
+
+  test('Should have content-type JSON', () => {
+    expect(response.headers.get('Content-Type')).toBe('application/json; charset=utf-8');
+  });
+
+  test('Should have array in the body', () => {
+    expectTypeOf(body).toBeArray();
+  });
+
+  test('Mortality risk for test data is 22.151%', () => {
+    expect(body.predictedRisk).toBe(22.151);
+  });
+});

@@ -10,9 +10,9 @@
     "albumin": { "type": "integer", "name": "albumin in g/L", "value": 30 },
     "asaGrade": { "type": "integer", "name": "ASA grade", "value": 3 },
     "glasgowComaScore": { "type": "integer", "name": "Glasgow Coma Score", "value": 14 },
-    "malignancy": { "type": "string", "name": "malignancy status",  "value": "nodal" },
+    "malignancy": { "type": "string", "name": "malignancy status",  "value": "Nodal" },
     "dyspnoea": { "type": "string", "name": "dyspnoea status", "value": "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation" },
-    "urgency": { "type": "string", "name": "urgency of surgery", "value": "2-6hrs" },
+    "urgency": { "type": "string", "name": "urgency of surgery", "value": "BT 2 - 6" },
     "indicationForSurgery": { "type": "string", "name": "indication for surgery", "value": "sepsis" },
     "soiling": { "type": "boolean", "name": "soiling status", "value": true }
   },
