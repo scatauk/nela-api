@@ -467,7 +467,7 @@ describe('Ancillary tests', () => {
   });
 });
 
-describe('Test vectors file', () => {
+describe('Test vectors file through calculation function', () => {
   // load sim.csv
   const fs = require('fs');
   const path = require('path');
@@ -505,3 +505,5 @@ describe('Test vectors file', () => {
     }
   }
 });
+
+export { getIndications, maxIndication };

@@ -1,5 +1,6 @@
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest';
 import createServer from '../src/server';
+import { maxIndication, getIndications } from './calculator.test.mjs';
 
 createServer();
 
@@ -146,4 +147,53 @@ describe('POST request to /nela-risk with invalid input returns an error', () =>
   test('Error message is `Missing required fields`', () => {
     expect(body.error).toBe('Missing required fields');
   });
+});
+
+describe('Test vectors file through API', () => {
+  // load sim.csv
+  const fs = require('fs');
+  const path = require('path');
+  // read whole of sim.csv into variable
+  const data = fs.readFileSync(path.resolve(__dirname, '../test/sim.csv'), 'utf8');
+  // split into lines
+  const lines = data.split('\n');
+  // for each line, split into fields
+  for (let i = 1; i < lines.length; i++) {
+    // for (let i = 4175; i < 4176; i++) {
+    const fields = lines[i].split(',');
+    // for each field, convert to correct type
+    const input = {
+      age: parseInt(fields[1]),
+      heartRate: parseInt(fields[4]),
+      systolicBloodPressure: parseInt(fields[5]),
+      urea: parseFloat(fields[6]),
+      whiteBloodCellCount: parseFloat(fields[7]),
+      albumin: parseFloat(fields[3]),
+      asaGrade: parseInt(fields[2]),
+      glasgowComaScore: parseInt(fields[8]),
+      malignancy: fields[9],
+      dyspnoea: fields[10],
+      urgency: fields[11],
+      indicationForSurgery: maxIndication(getIndications(fields)),
+      soiling: fields[43] === 'Free pus blood or bowel contents',
+    };
+    // fields[46] is intercept - skip if empty
+    if (fields[46] !== '') {
+      // check predictedRisk is correct
+      test(`predictedRisk is correct for test vector ${i}`, async () => {
+        let response;
+        let body;
+
+        response = await fetch('http://localhost:3000/nela-risk', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(input),
+        });
+        body = await response.json();
+        expect(body.predictedRisk).toBe(parseFloat(fields[78]));
+      });
+    }
+  }
 });
