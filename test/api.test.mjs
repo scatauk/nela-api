@@ -1,8 +1,10 @@
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest';
+import { beforeAll, afterAll, describe, expect, expectTypeOf, test, vi } from 'vitest';
 import createServer from '../src/server';
 import { maxIndication, getIndications } from './calculator.test.mjs';
 
-createServer();
+const mockServer = vi.fn(createServer);
+
+mockServer();
 
 const BEFORE_ALL_TIMEOUT = 30000; // 30 sec
 
@@ -146,6 +148,57 @@ describe('POST request to /nela-risk with invalid input returns an error', () =>
 
   test('Error message is `Missing required fields`', () => {
     expect(body.error).toBe('Missing required fields');
+  });
+});
+
+describe('If API fails, an error is thrown', () => {
+  let originalMath;
+  let response;
+  let body;
+  beforeAll(async () => {
+    originalMath = global.Math;
+    global.Math = {
+      min: vi.fn(),
+      max: vi.fn(),
+      pow: vi.fn(),
+      log: vi.fn(),
+      abs: vi.fn(),
+      floor: vi.fn(),
+    };
+    try {
+      response = await fetch('http://localhost:3000/nela-risk', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          age: 65,
+          heartRate: 85,
+          systolicBloodPressure: 130,
+          urea: 7,
+          whiteBloodCellCount: 12,
+          albumin: 30,
+          asaGrade: 3,
+          glasgowComaScore: 14,
+          malignancy: 'Nodal',
+          dyspnoea: 'Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation',
+          urgency: 'BT 2 - 6',
+          indicationForSurgery: 'sepsis',
+          soiling: true,
+        }),
+      });
+      body = await response.text();
+    } catch (error) {
+      body = error;
+    }
+  }, 5000);
+
+  afterAll(() => {
+    global.Math = originalMath;
+  });
+
+  test('Should have response status 400', async () => {
+    await expect(body.split('\n')[4]).toBe('<title>Error</title>');
   });
 });
 
