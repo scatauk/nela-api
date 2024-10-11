@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test:backend": "vitest run",
-    "coverage": "npm run test -- --run --reporter verbose --coverage",
+    "coverage": "npm run test:backend -- --run --reporter verbose --coverage",
     "lint": "eslint",
     "cy:run-e2e": "cypress run --e2e",
     "test:ui": "start-server-and-test start http://localhost:3000 cy:run-e2e",
