@@ -8,7 +8,7 @@
     "urea": { "type": "number", "name": "urea in mmol/L", "value": 7.0 },
     "whiteBloodCellCount": { "type": "number", "name": "white blood cell count in 10^9/L", "value": 12.0 },
     "albumin": { "type": "integer", "name": "albumin in g/L", "value": 30 },
-    "asaGrade": { "type": "integer", "name": "ASA grade", "value": 3, "minimum": 1, "maximum": 5 },
+    "asaGrade": { "type": "integer", "name": "ASA grade", "value": 3 },
     "glasgowComaScore": { "type": "integer", "name": "Glasgow Coma Score", "value": 14 },
     "malignancy": { "type": "string", "name": "malignancy status", "enum": [
       "None",
@@ -16,18 +16,8 @@
       "Nodal",
       "Distant"
     ], "value": "Nodal" },
-    "dyspnoea": { "type": "string", "name": "dyspnoea status", "enum": [
-      "No dyspnoea",
-      "Dyspnoea on exertion or CXR: mild COAD",
-      "Dyspnoea limiting exertion to <1 flight or CXR: moderate COAD",
-      "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation"
-    ], "value": "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation" },
-    "urgency": { "type": "string", "name": "urgency of surgery", "enum": [
-      "LT 2",
-      "BT 2 - 6",
-      "BT 6 - 18",
-      "GT 18"
-    ], "value": "BT 2 - 6" },
+    "dyspnoea": { "type": "string", "name": "dyspnoea status", "value": "Dyspnoea at rest/rate >30 at rest or CXR: fibrosis or consolidation" },
+    "urgency": { "type": "string", "name": "urgency of surgery", "value": "BT 2 - 6" },
     "indicationForSurgery": { "type": "string", "name": "indication for surgery", "value": "sepsis" },
     "soiling": { "type": "boolean", "name": "soiling status", "value": true }
   },

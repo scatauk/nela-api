@@ -85,7 +85,7 @@ function createServer() {
   // Start the server
   const PORT = 3000;
   app.listen(PORT, () => {
-    logger(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`); // eslint-disable-line no-console
   });
 }
 
