@@ -73,10 +73,9 @@ function createServer() {
     }
   });
 
-  // return html page if called with '/' route
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../') + '/frontend/index.html');
-  });
+  // return frontend elements page if called
+  console.log(path.join(__dirname, '../frontend'));
+  app.use(express.static(path.join(__dirname, '../frontend')));
 
   app.get('/schema.json', (req, res) => {
     res.sendFile(__dirname + '/schema.json');
