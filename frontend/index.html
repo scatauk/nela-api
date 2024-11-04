@@ -53,10 +53,34 @@
               class="btn btn-outline-secondary"
               type="button"
               id="button-addon"
+              data-bs-target="#setIndications"
+              data-bs-toggle="modal"
             >
               Set
             </button>
             <error-message :name="camelCase(field.name)" class="text-danger" />
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="setIndications"
+          tabindex="-1"
+          aria-labelledby="setIndicationsModalTitle"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="setIndicationsModalTitle">Set indications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>TODO</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+              </div>
+            </div>
           </div>
         </div>
         <button class="btn btn-primary" @click="submitForm" :disabled="Object.keys(errors).length">Submit</button>
