@@ -74,7 +74,6 @@ function createServer() {
   });
 
   // return frontend elements page if called
-  console.log(path.join(__dirname, '../frontend'));
   app.use(express.static(path.join(__dirname, '../frontend')));
 
   app.get('/schema.json', (req, res) => {

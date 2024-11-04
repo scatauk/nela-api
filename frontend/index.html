@@ -83,7 +83,7 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" @click="submitForm" :disabled="Object.keys(errors).length">Submit</button>
+        <button class="btn btn-primary" id="submitForm" @click="submitForm" :disabled="Object.keys(errors).length">Submit</button>
       </v-form>
       <div class="mt-3" v-if="result !== null">
         <h2>Result</h2>

@@ -5,7 +5,9 @@ import prettierRecommended from 'eslint-plugin-prettier/recommended';
 export default [
   {
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
-    ignores: ['node_modules', 'coverage', 'dist'],
+  },
+  {
+    ignores: ['node_modules', 'coverage', 'dist', 'frontend/js/**/*'],
   },
   {
     languageOptions: {

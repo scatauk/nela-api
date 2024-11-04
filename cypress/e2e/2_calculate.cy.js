@@ -7,7 +7,7 @@ describe('Calculate using an API call', () => {
   });
 
   it('Clicking the calculate button with placeholder data generates a result', () => {
-    cy.get('button').click();
+    cy.get('#submitForm').click();
     cy.get('h2').should('contain.text', 'Result');
     cy.get('pre').should('contain.text', '%');
   });
