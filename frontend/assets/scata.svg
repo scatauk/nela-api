@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="56px" viewBox="0 0 30 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Artboard</title>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="scata" transform="translate(1, 4)" fill="#273D75" fill-rule="nonzero" stroke="#FFFFFF" stroke-width="2">
+            <g id="Icon">
+                <g id="&lt;">
+                    <polygon id="Path" points="0 17.5734169 28 27.4518072 28 20.4756933 6.89433964 13.6327113 28 6.81635563 28 0 0 9.87839037"></polygon>
+                </g>
+                <g id="&gt;" transform="translate(0, 21.5482)">
+                    <polygon id="Path" points="28 9.87839037 0 -3.55271368e-15 0 6.97611396 21.0792453 13.7924696 0 20.6354516 0 27.4518072 28 17.5734169"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

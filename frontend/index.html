@@ -13,102 +13,170 @@
   </head>
 
   <body>
-    <div id="app" class="container">
-      <h1>NELA API</h1>
-      <v-form class="row" v-slot="{ errors }">
-        <div class="col-6 mb-3" v-for="(field, index) in schema" :key="index">
-          <label :for="camelCase(field.name)" class="form-label">{{ field.name }}</label>
-          <div v-if="field.enum">
-            <select @change="result = null" :id="camelCase(field.name)" class="form-select" v-model="field.value">
-              <option v-for="(option, index) in field.enum" :key="index" :value="option">{{ option }}</option>
-            </select>
-          </div>
-          <div v-else-if="field.type === 'boolean'">
-            <select @change="result = null" :id="camelCase(field.name)" class="form-select" v-model="field.value">
-              <option :value="true">true</option>
-              <option :value="false">false</option>
-            </select>
-          </div>
-          <div v-else :class="field.name === 'indication for surgery' ? 'input-group' : ''">
-            <v-field
-              as="input"
-              v-slot="{ field }"
-              @keyup="result = null;"
-              @keypress="isNumber($event, field.type)"
-              @change="result = null"
-              :type="(field.type === 'integer' || field.type === 'number') ? 'number' : field.type"
-              :rules="validationRule(field)"
-              :name="camelCase(field.name)"
-              :id="camelCase(field.name)"
-              class="form-control"
-              :class="{ 'is-invalid': errors[camelCase(field.name)] }"
-              v-model="field.value"
-              v-slot="{ field, errors, errorMessage }"
-              :readonly="field.name === 'indication for surgery' ? true : false"
-              :aria-describedby="field.name === 'indication for surgery' ? 'button-addon' : ''"
-            >
-              <input v-bind="field" class="form-control" />
-            </v-field>
-            <button
-              v-if="field.name === 'indication for surgery'"
-              class="btn btn-outline-secondary"
-              type="button"
-              id="button-addon"
-              data-bs-target="#setIndications"
-              data-bs-toggle="modal"
-              @click="result = null"
-            >
-              Set
-            </button>
-            <error-message :name="camelCase(field.name)" class="text-danger" />
+    <div id="app">
+      <nav class="navbar fixed-top bg-primary navbar-expand-lg" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="assets/scata.svg" alt="Bootstrap" width="30" height="30" />
+            NELA Risk Calc API
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a
+                  :class="(tab === 'demo') ? 'active': ''"
+                  class="nav-link"
+                  aria-current="page"
+                  href="#"
+                  @click="tab = 'demo'"
+                  >Demo</a
+                >
+              </li>
+              <li class="nav-item">
+                <a :class="(tab === 'ref') ? 'active': ''" class="nav-link" href="#" @click="tab = 'ref'"
+                  >API Reference</a
+                >
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Resources
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a class="dropdown-item" href="https://www.nela.org.uk/Audit-info-Documents#pt"
+                      >NELA reference docs</a
+                    >
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="https://github.com/scatauk/nela-api">Source code</a></li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
-        <div
-          class="modal fade"
-          id="setIndications"
-          tabindex="-1"
-          aria-labelledby="setIndicationsModalTitle"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="setIndicationsModalTitle">Set indications</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div v-for="(indication, key) in indications" :key="key">
-                  <h6 class="mt-3">{{ key }}</h6>
-                  <div class="form-check" v-for="option in indication">
-                    <input
-                      v-model="chosenIndications[key][option]"
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      :id="camelCase(option)"
-                    />
-                    <label class="form-check-label" :for="camelCase(option)"> {{ option }} </label>
+      </nav>
+      <div v-if="tab === 'ref'" class="container mt-5">
+        <h1 class="pt-4">API Reference</h1>
+        <hr />
+        <p>To do...</p>
+      </div>
+      <div v-if="tab === 'demo'" class="container mt-5">
+        <h1 class="pt-4">Demo</h1>
+        <hr />
+        <v-form class="row" v-slot="{ errors }">
+          <div class="col-6 mb-3" v-for="(field, index) in schema" :key="index">
+            <label :for="camelCase(field.name)" class="form-label">{{ field.name }}</label>
+            <div v-if="field.enum">
+              <select @change="result = null" :id="camelCase(field.name)" class="form-select" v-model="field.value">
+                <option v-for="(option, index) in field.enum" :key="index" :value="option">{{ option }}</option>
+              </select>
+            </div>
+            <div v-else-if="field.type === 'boolean'">
+              <select @change="result = null" :id="camelCase(field.name)" class="form-select" v-model="field.value">
+                <option :value="true">true</option>
+                <option :value="false">false</option>
+              </select>
+            </div>
+            <div v-else :class="field.name === 'indication for surgery' ? 'input-group' : ''">
+              <v-field
+                as="input"
+                v-slot="{ field }"
+                @keyup="result = null;"
+                @keypress="isNumber($event, field.type)"
+                @change="result = null"
+                :type="(field.type === 'integer' || field.type === 'number') ? 'number' : field.type"
+                :rules="validationRule(field)"
+                :name="camelCase(field.name)"
+                :id="camelCase(field.name)"
+                class="form-control"
+                :class="{ 'is-invalid': errors[camelCase(field.name)] }"
+                v-model="field.value"
+                v-slot="{ field, errors, errorMessage }"
+                :readonly="field.name === 'indication for surgery' ? true : false"
+                :aria-describedby="field.name === 'indication for surgery' ? 'button-addon' : ''"
+              >
+                <input v-bind="field" class="form-control" />
+              </v-field>
+              <button
+                v-if="field.name === 'indication for surgery'"
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon"
+                data-bs-target="#setIndications"
+                data-bs-toggle="modal"
+                @click="result = null"
+              >
+                Set
+              </button>
+            </div>
+            <error-message :name="camelCase(field.name)" class="text-danger" />
+          </div>
+          <div
+            class="modal fade"
+            id="setIndications"
+            tabindex="-1"
+            aria-labelledby="setIndicationsModalTitle"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="setIndicationsModalTitle">Set indications</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div v-for="(indication, key) in indications" :key="key">
+                    <h6 class="mt-3">{{ key }}</h6>
+                    <div class="form-check" v-for="option in indication">
+                      <input
+                        v-model="chosenIndications[key][option]"
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        :id="camelCase(option)"
+                      />
+                      <label class="form-check-label" :for="camelCase(option)"> {{ option }} </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="changeInd()">Done</button>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="changeInd()">
+                    Done
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+          <button class="btn btn-primary mt-3" id="submitForm" @click="submitForm" :disabled="Object.keys(errors).length">
+            Submit
+          </button>
+        </v-form>
+        <div class="mt-3" v-if="result !== null">
+          <h2>Result</h2>
+          <pre>Predicted mortality risk: {{ result.predictedRisk }}%</pre>
+          <button class="btn btn-primary" @click="reset()">Reset</button>
+          <h6 class="mt-5">Request sent:</h6>
+          <pre>{{ request }}</pre>
+          <h6>Response received:</h6>
+          <pre>{{ result }}</pre>
         </div>
-        <button class="btn btn-primary" id="submitForm" @click="submitForm" :disabled="Object.keys(errors).length">
-          Submit
-        </button>
-      </v-form>
-      <div class="mt-3" v-if="result !== null">
-        <h2>Result</h2>
-        <pre>Predicted mortality risk: {{ result.predictedRisk }}%</pre>
-        <button class="btn btn-primary" @click="reset()">Reset</button>
-        <h6 class="mt-5">Request sent:</h6>
-        <pre>{{ request }}</pre>
-        <h6>Response received:</h6>
-        <pre>{{ result }}</pre>
       </div>
     </div>
 
@@ -148,6 +216,7 @@
             schema: {},
             result: null,
             request: {},
+            tab: 'demo',
             chosenIndications: {
               Bleeding: [],
               Other: [],
