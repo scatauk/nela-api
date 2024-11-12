@@ -7,6 +7,6 @@ describe('Basic load', () => {
   });
 
   it('loads the site', () => {
-    cy.get('.container > h1').should('contain.text', 'NELA API');
+    cy.get('.container > h1').should('contain.text', 'Demo');
   });
 });

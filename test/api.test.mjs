@@ -29,8 +29,8 @@ describe('Request to / returns the interactive front end', () => {
     expectTypeOf(body).toBeArray();
   });
 
-  test('One of the elements in the array should contain <h1>NELA API</h1>', () => {
-    expect(body).to.have.string('<h1>NELA API</h1>');
+  test('One of the elements in the array should contain `NELA Risk Calc API`', () => {
+    expect(body).to.have.string('NELA Risk Calc API');
   });
 });
 
