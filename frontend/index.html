@@ -75,7 +75,82 @@
       <div v-if="tab === 'ref'" class="container mt-5">
         <h1 class="pt-4">API Reference</h1>
         <hr />
-        <p>To do...</p>
+        <!-- API REFERENCE CONTENT -->
+        <div class="main-content">
+          <div class="container-fluid">
+            <h3 class="page-title">/nela-risk</h3>
+            <h4 class="page-title">Lorem ipsum dolor</h4>
+            <p>
+              Todo... <code>here</code> watch this space.
+            </p>
+            <div class="row">
+              <div class="col-md-7">
+                <!-- TABLE HOVER -->
+                <div class="panel">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Request body</h3>
+                  </div>
+                  <div class="panel-body">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Parameter</th>
+                          <th>Type</th>
+                          <th>Example</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(field, index) in referenceSchema" :key="index">
+                          <td>{{ index }}</td>
+                          <td><code>{{ field.type }}</code></td>
+                          <td><code>{{ field.value }}</code></td>
+                          <td>
+                            {{ field.name }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- END TABLE HOVER -->
+              </div>
+              <div class="col-md-5">
+                <!-- TABLE HOVER -->
+                <div class="panel">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Response</h3>
+                  </div>
+                  <div class="panel-body">
+                    <pre>
+{
+  "predictedRisk": 22.151,
+  "debug": {
+    "ageComponent": 0.0666,
+    "asaComponent": 1.13007,
+    "asaAgeInteraction": -0.03021,
+    "albuminComponent": -1.2969,
+    "pulseComponent": -0.08022,
+    "systolicBP_Component": -0.0195,
+    "lnUreaComponent": 0.01744677484400017,
+    "lnWBCComponent": 0.0034741681078890863,
+    "gcsComponent": 0.41557,
+    "malignancyComponent": 0.5061,
+    "respiratoryComponent": 0.607,
+    "urgencyComponent": 0.14779,
+    "indicationComponent": 0.02812,
+    "soilingComponent": 0.29453
+  }
+}</pre
+                    >
+                  </div>
+                </div>
+                <!-- END TABLE HOVER -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END API REFERENCE CONTENT -->
       </div>
       <div v-if="tab === 'demo'" class="container mt-5">
         <h1 class="pt-4">Demo</h1>
@@ -164,7 +239,12 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-primary mt-3" id="submitForm" @click="submitForm" :disabled="Object.keys(errors).length">
+          <button
+            class="btn btn-primary mt-3"
+            id="submitForm"
+            @click="submitForm"
+            :disabled="Object.keys(errors).length"
+          >
             Submit
           </button>
         </v-form>
@@ -214,6 +294,7 @@
         data() {
           return {
             schema: {},
+            referenceSchema: {},
             result: null,
             request: {},
             tab: 'demo',
@@ -365,6 +446,8 @@
             .then((data) => {
               // Parse test data into an array of objects
               this.schema = JSON.parse(data).properties;
+              // this is unchanged by front end for the API reference
+              this.referenceSchema = JSON.parse(data).properties;
             })
             .catch((error) => {
               console.error('Error fetching schema data:', error);
