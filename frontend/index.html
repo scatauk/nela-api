@@ -78,10 +78,9 @@
         <!-- API REFERENCE CONTENT -->
         <div class="main-content">
           <div class="container-fluid">
-            <h3 class="page-title">/nela-risk</h3>
-            <h4 class="page-title">Lorem ipsum dolor</h4>
+            <h3 class="page-title"><span class="badge text-bg-primary">POST</span> /nela-risk</h3>
             <p>
-              Todo... <code>here</code> watch this space.
+              Calculate predicted mortality risk following emergency laparotomy
             </p>
             <div class="row">
               <div class="col-md-7">
@@ -97,14 +96,16 @@
                           <th>Parameter</th>
                           <th>Type</th>
                           <th>Example</th>
-                          <th>Description</th>
+                          <th>Description</th
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="(field, index) in referenceSchema" :key="index">
                           <td>{{ index }}</td>
                           <td><code>{{ field.type }}</code></td>
-                          <td><code>{{ field.value }}</code></td>
+                          <td v-if="field.enum"><code v-for="(option, i) in field.enum">{{ option }}<br /><hr v-if="i !== field.enum.length - 1"/></code></td>
+                          <td v-else-if="field.type === 'boolean'"><code>true<br /><hr />false</code></td>
+                          <td v-else><code>{{ field.value }}</code></td>
                           <td>
                             {{ field.name }}
                           </td>
