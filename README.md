@@ -2,8 +2,14 @@
 
 ![tests](https://github.com/scatauk/nela-api/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/scatauk/nela-api/graph/badge.svg?token=L6JE2EW0S8)](https://codecov.io/gh/scatauk/nela-api)
+[![MIT license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/scatauk/nela-api/blob/main/LICENSE)
 
-This repository contains an API to generate NELA risk predictions.
+This repository contains an API to generate NELA risk predictions, alongside a simple browser-based demo of its use and API reference documentation:
+
+![Screenshot of the API docs](./screenshot1.png)
+
+![Screenshot of the demo](./screenshot2.png)
+
 
 It will allow a POST request to be sent containing patient data and returns a mortality risk prediction percentage based on the NELA project's risk prediction calculation.  Examples below are provided using curl but the same principles apply whichever API call method is used:
 
