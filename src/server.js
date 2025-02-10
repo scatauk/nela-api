@@ -9,7 +9,16 @@ function createServer() {
   // will log the message only if the NELA_DEBUG environment variable is set to true
   logger('DEBUG mode enabled');
 
-  app.use(bodyParser.json());
+  app.use((req, res, next) => {
+    bodyParser.json()(req, res, (err) => {
+        if (err) {
+            logger(err);
+            res.status(400).json({ error: 'Invalid JSON' });
+            return;
+        }
+        next();
+    });
+});
 
   // Define the API route
   app.post('/nela-risk', (req, res) => {

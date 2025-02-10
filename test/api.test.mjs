@@ -34,6 +34,39 @@ describe('Request to / returns the interactive front end', () => {
   });
 });
 
+// test malformed JSON in request
+describe('Request to /nela-risk with malformed JSON returns an error', () => {
+  let response;
+  let body;
+
+  beforeAll(async () => {
+    response = await fetch('http://localhost:3000/nela-risk', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: 'malformed JSON',
+    });
+    body = await response.json();
+  }, BEFORE_ALL_TIMEOUT);
+
+  test('Should have response status 400', () => { 
+    expect(response.status).toBe(400);
+  });
+
+  test('Should have content-type JSON', () => {
+    expect(response.headers.get('Content-Type')).toBe('application/json; charset=utf-8');
+  });
+
+  test('Should have array in the body', () => {
+    expectTypeOf(body).toBeArray();
+  });
+
+  test('Error message is `Invalid JSON`', () => {
+    expect(body.error).toBe('Invalid JSON');
+  });
+});
+
 describe('Request to /schema.json returns the expected schema in JSON', () => {
   let response;
   let body;
@@ -60,7 +93,7 @@ describe('Request to /schema.json returns the expected schema in JSON', () => {
   });
 });
 
-describe('POST request to /nela-risk returns a risk score', () => {
+describe('Valid POST request to /nela-risk returns a risk score', () => {
   let response;
   let body;
 
