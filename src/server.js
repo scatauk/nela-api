@@ -11,14 +11,14 @@ function createServer() {
 
   app.use((req, res, next) => {
     bodyParser.json()(req, res, (err) => {
-        if (err) {
-            logger(err);
-            res.status(400).json({ error: 'Invalid JSON' });
-            return;
-        }
-        next();
+      if (err) {
+        logger(err);
+        res.status(400).json({ error: 'Invalid JSON' });
+        return;
+      }
+      next();
     });
-});
+  });
 
   // Define the API route
   app.post('/nela-risk', (req, res) => {

@@ -50,7 +50,7 @@ describe('Request to /nela-risk with malformed JSON returns an error', () => {
     body = await response.json();
   }, BEFORE_ALL_TIMEOUT);
 
-  test('Should have response status 400', () => { 
+  test('Should have response status 400', () => {
     expect(response.status).toBe(400);
   });
 
