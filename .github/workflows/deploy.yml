@@ -1,4 +1,5 @@
 name: Deploy
+
 on:
   push:
     branches: [ "main" ]
@@ -19,6 +20,7 @@ jobs:
   deploy:
     needs: [tests, lint, actionlint]
     runs-on: ubuntu-latest
+    environment: production
     env:
       DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
@@ -34,6 +36,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          log-public-key: true
       - name: Trust server
         run: |
           mkdir -p ~/.ssh
