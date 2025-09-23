@@ -9,7 +9,7 @@ module.exports = {
 
   deploy: {
     production: {
-      ssh_options: 'IdentitiesOnly=yes -i ~/.ssh/pm2_deploy ForwardAgent=yes',
+      ssh_options: ['-o', 'IdentitiesOnly=yes', '-o', 'ForwardAgent=yes'],
       user: process.env.DEPLOY_USER || 'deploy',
       host: [process.env.DEPLOY_HOST],
       ref: process.env.DEPLOY_REF || 'origin/main',
