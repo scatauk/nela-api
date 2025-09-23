@@ -13,7 +13,7 @@ module.exports = {
       user: process.env.DEPLOY_USER || 'deploy',
       host: [process.env.DEPLOY_HOST],
       ref: process.env.DEPLOY_REF || 'origin/main',
-      repo: 'git@github.com:scatauk/nela-api.git',
+      repo: 'https://github.com/scatauk/nela-api.git',
       path: process.env.DEPLOY_PATH, // from secrets
       'post-deploy':
         process.env.POST_DEPLOY ||
