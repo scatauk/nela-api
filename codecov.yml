@@ -1,6 +1,7 @@
 ignore:
   - "cypress"
   - "frontend"
+  - "ecosystem.config.js"
 coverage:
   precision: 2
   round: down
