@@ -41,5 +41,11 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+      - name: Guard required env
+        shell: bash
+        run: |
+          : "${DEPLOY_HOST:?DEPLOY_HOST is empty}"
+          : "${DEPLOY_USER:?DEPLOY_USER is empty}"
+          : "${DEPLOY_PATH:?DEPLOY_PATH is empty}"
       - name: PM2 deploy
         run: pm2 deploy ecosystem.config.js production
