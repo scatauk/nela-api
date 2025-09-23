@@ -1,0 +1,42 @@
+name: Deploy
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
+
+  lint:
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+
+  actionlint:
+    uses: ./.github/workflows/actionlint.yml
+    secrets: inherit
+
+  deploy:
+    needs: [tests, lint, actionlint]
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      DEPLOY_REF:  ${{ secrets.DEPLOY_REF }}     # optional
+      POST_DEPLOY: ${{ secrets.POST_DEPLOY }}    # optional
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm i -g pm2
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Trust server
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+      - name: PM2 deploy
+        run: pm2 deploy ecosystem.config.js production

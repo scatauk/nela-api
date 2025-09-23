@@ -1,6 +1,7 @@
 name: Lint source code as per project code style
 
 on:
+  workflow_call:
   push:
     branches: [ main ]
   pull_request:
