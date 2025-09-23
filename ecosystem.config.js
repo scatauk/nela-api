@@ -9,8 +9,9 @@ module.exports = {
 
   deploy: {
     production: {
+      ssh_options: 'IdentitiesOnly=yes -i ~/.ssh/pm2_deploy ForwardAgent=yes',
       user: process.env.DEPLOY_USER || 'deploy',
-      host: process.env.DEPLOY_HOST, // from secrets
+      host: [process.env.DEPLOY_HOST],
       ref: process.env.DEPLOY_REF || 'origin/main',
       repo: 'git@github.com:scatauk/nela-api.git',
       path: process.env.DEPLOY_PATH, // from secrets
