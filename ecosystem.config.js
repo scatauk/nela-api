@@ -11,7 +11,7 @@ module.exports = {
     production: {
       ssh_options: ['IdentitiesOnly=yes'],
       user: process.env.DEPLOY_USER || 'deploy',
-      host: [process.env.DEPLOY_HOST].filter(Boolean),
+      host: ['prod-app'],
       ref: process.env.DEPLOY_REF || 'origin/main',
       repo: 'https://github.com/scatauk/nela-api.git',
       path: process.env.DEPLOY_PATH, // from secrets

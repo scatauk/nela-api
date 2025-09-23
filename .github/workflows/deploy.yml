@@ -47,5 +47,17 @@ jobs:
           : "${DEPLOY_HOST:?DEPLOY_HOST is empty}"
           : "${DEPLOY_USER:?DEPLOY_USER is empty}"
           : "${DEPLOY_PATH:?DEPLOY_PATH is empty}"
+
+      - name: SSH alias
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          {
+            echo "Host prod-app"
+            echo "  HostName ${DEPLOY_HOST}"
+            echo "  User ${DEPLOY_USER}"
+            echo "  IdentitiesOnly yes"
+            echo "  StrictHostKeyChecking accept-new"
+          } >> ~/.ssh/config
       - name: PM2 deploy
         run: pm2 deploy ecosystem.config.js production
