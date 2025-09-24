@@ -25,7 +25,6 @@ jobs:
       DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
       DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-      DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
       DEPLOY_REF:  ${{ secrets.DEPLOY_REF }}     # optional
       POST_DEPLOY: ${{ secrets.POST_DEPLOY }}    # optional
     steps:
@@ -36,7 +35,7 @@ jobs:
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: $DEPLOY_SSH_KEY
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           log-public-key: true
       - name: Trust server
         run: |
