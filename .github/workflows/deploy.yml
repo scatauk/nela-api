@@ -1,5 +1,4 @@
 name: Deploy
-
 on:
   push:
     branches: [ "main" ]
@@ -24,30 +23,63 @@ jobs:
     env:
       DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-      DEPLOY_REF:  ${{ secrets.DEPLOY_REF }}     # optional
-      POST_DEPLOY: ${{ secrets.POST_DEPLOY }}    # optional
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}   # e.g. /var/www/nela-api
+      DEPLOY_REF:  ${{ secrets.DEPLOY_REF }}    # optional, default origin/main
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npm i -g pm2
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY }}
-            ${{ secrets.DEPLOY_GH_ACCESS }}
-          log-public-key: true
-      - name: Trust server
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+
+      # Guard required envs
       - name: Guard required env
         shell: bash
         run: |
           : "${DEPLOY_HOST:?DEPLOY_HOST is empty}"
           : "${DEPLOY_USER:?DEPLOY_USER is empty}"
           : "${DEPLOY_PATH:?DEPLOY_PATH is empty}"
-      - name: PM2 deploy
-        run: pm2 deploy ecosystem.config.js production
+
+      # 🚀 SSH to server and perform the deploy there
+      - name: Deploy over SSH (appleboy)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:     ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key:      ${{ secrets.SSH_PRIVATE_KEY }}  # SSH private key
+          port:     ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          timeout: 10m
+          envs: DEPLOY_PATH,DEPLOY_REF
+          script: |
+            set -euo pipefail
+
+            APP_BASE="${DEPLOY_PATH}"
+            REPO_URL="https://github.com/scatauk/nela-api.git"
+            BRANCH="${DEPLOY_REF:-origin/main}"
+            BRANCH_NAME="${BRANCH##*/}"   # e.g. main
+
+            # 1) Ensure base dir
+            mkdir -p "$APP_BASE"
+            cd "$APP_BASE"
+
+            # 2) Prepare working tree at $APP_BASE/source (idempotent)
+            if [ ! -d source/.git ]; then
+              rm -rf source
+              git clone --depth=1 "$REPO_URL" source
+            fi
+
+            # 3) Force HTTPS remote & sync
+            git -C source remote set-url origin "$REPO_URL"
+            git -C source fetch --prune --tags
+            git -C source checkout -f "$BRANCH_NAME" || git -C source checkout -f main
+            git -C source reset --hard "origin/$BRANCH_NAME"
+
+            # 4) Build
+            cd source
+            command -v pm2 >/dev/null 2>&1 || npm i -g pm2
+            npm ci --omit=dev
+            npm run build
+
+            # 5) Start or reload via PM2 using your ecosystem file in the repo
+            #    (assumes 'apps[0].name' is 'nela-api' in ecosystem.config.js)
+            pm2 startOrReload ecosystem.config.js --only nela-api || pm2 start ecosystem.config.js --only nela-api
+            pm2 save
