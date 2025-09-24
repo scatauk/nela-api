@@ -77,7 +77,6 @@ jobs:
             cd source
             command -v pm2 >/dev/null 2>&1 || npm i -g pm2
             npm ci --omit=dev
-            npm run build
 
             # 5) Start or reload via PM2 using your ecosystem file in the repo
             #    (assumes 'apps[0].name' is 'nela-api' in ecosystem.config.js)
