@@ -47,5 +47,21 @@ jobs:
           : "${DEPLOY_HOST:?DEPLOY_HOST is empty}"
           : "${DEPLOY_USER:?DEPLOY_USER is empty}"
           : "${DEPLOY_PATH:?DEPLOY_PATH is empty}"
+
+      - name: Force origin to HTTPS on server
+        shell: bash
+        run: |
+          set -e
+          ssh -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" '
+              set -e
+              for d in "'"$DEPLOY_PATH"'/source" "'"$DEPLOY_PATH"'/current"; do
+                if [ -d "$d/.git" ]; then
+                  echo "Fixing remote in $d"
+                  git -C "$d" remote set-url origin https://github.com/scatauk/nela-api.git || true
+                  git -C "$d" remote -v
+                fi
+              done
+            '
       - name: PM2 deploy
         run: pm2 deploy ecosystem.config.js production
