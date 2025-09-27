@@ -8,6 +8,8 @@
     <script src="js/vue.global.js"></script>
     <script src="js/vee-validate.iife.js"></script>
     <script src="js/vee-validate-rules.js"></script>
+    <!-- Load configuration -->
+    <script src="config.js"></script>
     <!-- Add Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -656,6 +658,10 @@
               return index === 0 ? word.toLowerCase() : word.toUpperCase();
             });
           },
+          getApiBaseUrl() {
+            // Use the configuration loaded from the server
+            return window.NELA_CONFIG?.apiBaseUrl || 'http://localhost:3000';
+          },
           submitForm($event) {
             $event.preventDefault();
             const req = {};
@@ -669,7 +675,8 @@
               }
             }
             this.request = req;
-            fetch('http://localhost:3000/nela-risk', {
+            const apiBaseUrl = this.getApiBaseUrl();
+            fetch(`${apiBaseUrl}/nela-risk`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

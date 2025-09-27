@@ -3,7 +3,10 @@ module.exports = {
     {
       name: 'nela-api',
       script: 'src/index.js',
-      env: { NODE_ENV: 'production' },
+      env: {
+        NODE_ENV: 'production',
+        API_BASE_URL: process.env.DEPLOY_URL,
+      },
     },
   ],
 

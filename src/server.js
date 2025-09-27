@@ -5,6 +5,9 @@ const path = require('path');
 const { calculateNelaRisk } = require('./calculate');
 const { logger } = require('./logger');
 
+// Load environment variables
+require('dotenv').config();
+
 function createServer() {
   // will log the message only if the NELA_DEBUG environment variable is set to true
   logger('DEBUG mode enabled');
@@ -89,8 +92,20 @@ function createServer() {
     res.sendFile(__dirname + '/schema.json');
   });
 
+  // Serve frontend configuration with environment variables
+  app.get('/config.js', (req, res) => {
+    const apiBaseUrl = process.env.API_BASE_URL || 'http://localhost:3000';
+    const config = `
+// Auto-generated configuration
+window.NELA_CONFIG = {
+  apiBaseUrl: '${apiBaseUrl}'
+};`;
+    res.setHeader('Content-Type', 'application/javascript');
+    res.send(config);
+  });
+
   // Start the server
-  const PORT = 3000;
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`); // eslint-disable-line no-console
   });
