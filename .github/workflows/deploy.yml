@@ -38,6 +38,7 @@ jobs:
           : "${DEPLOY_HOST:?DEPLOY_HOST is empty}"
           : "${DEPLOY_USER:?DEPLOY_USER is empty}"
           : "${DEPLOY_PATH:?DEPLOY_PATH is empty}"
+          : "${DEPLOY_URL:?DEPLOY_URL is empty}"
 
       # 🚀 SSH to server and perform the deploy there
       - name: Deploy over SSH (appleboy)
@@ -72,7 +73,7 @@ jobs:
             git -C source remote set-url origin "$REPO_URL"
             git -C source fetch --prune --tags
             git -C source checkout -f "$BRANCH_NAME" || git -C source checkout -f main
-            git -C source reset --hard "origin/$BRANCH_NAME"
+            git -C source pull origin "$BRANCH_NAME" || git -C source reset --hard "origin/$BRANCH_NAME"
 
             # 4) Build
             cd source
@@ -83,5 +84,19 @@ jobs:
             #    (assumes 'apps[0].name' is 'nela-api' in ecosystem.config.js)
             #    Export DEPLOY_URL for PM2 to use
             export API_BASE_URL="$DEPLOY_URL"
-            pm2 startOrReload ecosystem.config.js --only nela-api || pm2 start ecosystem.config.js --only nela-api
+            echo "Deploying with API_BASE_URL=$API_BASE_URL"
+            
+            # Ensure PM2 stops existing process cleanly before restart
+            pm2 delete nela-api || true
+            pm2 start ecosystem.config.js --only nela-api
+            
+            # Verify the process started successfully
+            sleep 2
+            if ! pm2 show nela-api > /dev/null 2>&1; then
+              echo "ERROR: PM2 process 'nela-api' failed to start"
+              pm2 logs nela-api --lines 50
+              exit 1
+            fi
+            
             pm2 save
+            echo "Deployment completed successfully"
