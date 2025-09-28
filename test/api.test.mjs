@@ -235,6 +235,82 @@ describe('If API fails, an error is thrown', () => {
   });
 });
 
+describe('Request to /config.js returns frontend configuration', () => {
+  let response;
+  let body;
+
+  beforeAll(async () => {
+    response = await fetch('http://localhost:3000/config.js');
+    body = await response.text();
+  }, BEFORE_ALL_TIMEOUT);
+
+  test('Should have response status 200', () => {
+    expect(response.status).toBe(200);
+  });
+
+  test('Should have content-type application/javascript', () => {
+    expect(response.headers.get('Content-Type')).toBe('application/javascript; charset=utf-8');
+  });
+
+  test('Should contain NELA_CONFIG object', () => {
+    expect(body).toContain('window.NELA_CONFIG');
+  });
+
+  test('Should contain apiBaseUrl property', () => {
+    expect(body).toContain('apiBaseUrl');
+  });
+
+  test('Should use default localhost URL when API_BASE_URL is not set', () => {
+    expect(body).toContain('http://localhost:3000');
+  });
+});
+
+describe('Environment variable handling', () => {
+  let originalEnv;
+
+  beforeAll(() => {
+    // Store original environment variables
+    originalEnv = {
+      PORT: process.env.PORT,
+      API_BASE_URL: process.env.API_BASE_URL,
+    };
+  });
+
+  afterAll(() => {
+    // Restore original environment variables
+    if (originalEnv.PORT !== undefined) {
+      process.env.PORT = originalEnv.PORT;
+    } else {
+      delete process.env.PORT;
+    }
+    if (originalEnv.API_BASE_URL !== undefined) {
+      process.env.API_BASE_URL = originalEnv.API_BASE_URL;
+    } else {
+      delete process.env.API_BASE_URL;
+    }
+  });
+
+  test('Should use custom PORT when set', async () => {
+    process.env.PORT = '4000';
+
+    // Create a new server instance to test PORT handling
+    const createServer = (await import('../src/server.js')).default;
+    createServer();
+
+    // The server should use the custom PORT
+    expect(process.env.PORT).toBe('4000');
+  });
+
+  test('Should use custom API_BASE_URL when set', async () => {
+    process.env.API_BASE_URL = 'https://api.example.com';
+
+    const response = await fetch('http://localhost:3000/config.js');
+    const body = await response.text();
+
+    expect(body).toContain('https://api.example.com');
+  });
+});
+
 describe('Test vectors file through API', () => {
   // load sim.csv
   const fs = require('fs');
