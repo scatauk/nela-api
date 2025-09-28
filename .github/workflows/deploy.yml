@@ -25,6 +25,7 @@ jobs:
       DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
       DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}   # e.g. /var/www/nela-api
       DEPLOY_REF:  ${{ secrets.DEPLOY_REF }}    # optional, default origin/main
+      DEPLOY_URL:  ${{ secrets.DEPLOY_URL }}    # e.g. https://nela-api.scata.org.uk
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -48,7 +49,7 @@ jobs:
           port:     ${{ secrets.DEPLOY_PORT || 22 }}
           script_stop: true
           timeout: 10m
-          envs: DEPLOY_PATH,DEPLOY_REF
+          envs: DEPLOY_PATH,DEPLOY_REF,DEPLOY_URL
           script: |
             set -euo pipefail
 
@@ -80,5 +81,7 @@ jobs:
 
             # 5) Start or reload via PM2 using your ecosystem file in the repo
             #    (assumes 'apps[0].name' is 'nela-api' in ecosystem.config.js)
+            #    Export DEPLOY_URL for PM2 to use
+            export API_BASE_URL="$DEPLOY_URL"
             pm2 startOrReload ecosystem.config.js --only nela-api || pm2 start ecosystem.config.js --only nela-api
             pm2 save

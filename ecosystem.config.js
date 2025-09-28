@@ -5,7 +5,7 @@ module.exports = {
       script: 'src/index.js',
       env: {
         NODE_ENV: 'production',
-        API_BASE_URL: process.env.DEPLOY_URL,
+        API_BASE_URL: process.env.API_BASE_URL,
       },
     },
   ],
