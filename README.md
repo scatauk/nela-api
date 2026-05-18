@@ -4,7 +4,12 @@
 [![codecov](https://codecov.io/gh/scatauk/nela-api/graph/badge.svg?token=L6JE2EW0S8)](https://codecov.io/gh/scatauk/nela-api)
 [![MIT license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/scatauk/nela-api/blob/main/LICENSE)
 
-This repository contains an API to generate NELA risk predictions, alongside a simple browser-based demo of its use and API reference documentation:
+This repository contains an API to generate NELA risk predictions, alongside a simple browser-based demo of its use and API reference documentation.
+
+> [!IMPORTANT]  
+> The open source software in this repository is not created, validated, registered as a medical device, maintained, monitored or endorsed by the NELA Project Team, the RCoA, HQIP or NHSE.
+
+It is **independently** generated from and validated against development materials made public by the NELA Project Team and is provided as a courtesy to implementers who require a NELA risk score within their clinical workflows.
 
 ![Screenshot of the API docs](./screenshot1.png)
 
