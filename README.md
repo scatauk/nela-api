@@ -6,6 +6,8 @@
 
 This repository contains an API to generate NELA risk predictions, alongside a simple browser-based demo of its use and API reference documentation.
 
+A live demo deployment is available at [https://nela-api.scata.org.uk/](https://nela-api.scata.org.uk/).
+
 > [!IMPORTANT]  
 > The open source software in this repository is not created, validated, registered as a medical device, maintained, monitored or endorsed by the NELA Project Team, the RCoA, HQIP or NHSE.
 

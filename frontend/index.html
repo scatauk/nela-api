@@ -66,7 +66,7 @@
                   >
                     <div class="py-1">
                       <a
-                        href="https://www.nela.org.uk/Audit-info-Documents#pt"
+                        href="https://www.nela.org.uk/nela-risk-calculator-explainers"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >NELA reference docs</a>
                       <div class="border-t border-gray-100"></div>
@@ -113,7 +113,7 @@
               @click="tab = 'ref'"
             >API Reference</a>
             <a
-              href="https://www.nela.org.uk/Audit-info-Documents#pt"
+              href="https://www.nela.org.uk/nela-risk-calculator-explainers"
               class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-700"
             >NELA reference docs</a>
             <a
@@ -263,6 +263,18 @@
       </div>
 
       <div v-if="tab === 'demo'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+        <div class="rounded-md border-l-4 border-amber-400 bg-amber-50 p-4 my-4">
+          <div class="flex">
+            <svg class="h-5 w-5 text-amber-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+            <div class="ml-3 text-sm text-amber-800">
+              <p class="font-semibold">Important</p>
+              <p class="mt-1">The open source software in this repository is not created, validated, registered as a medical device, maintained, monitored or endorsed by the NELA Project Team, the RCoA, HQIP or NHSE.</p>
+              <p class="mt-2">It is <strong>independently</strong> generated from and validated against development materials made public by the NELA Project Team and is provided as a courtesy to implementers who require a NELA risk score within their clinical workflows.</p>
+            </div>
+          </div>
+        </div>
         <h1 class="text-3xl font-bold text-gray-900 pt-4">Demo</h1>
         <hr class="my-4" />
         <v-form class="grid grid-cols-1 md:grid-cols-2 gap-6" v-slot="{ errors }">
